@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark" data-page-node-id="8L78jve3dVA8A3YUbgoW5Z">
+<head data-page-node-id="cgknGSVxwliAMY1RKBnrdu">
+<meta charset="UTF-8" data-page-node-id="jXm4NTIh4yhyUfCyrFCqwE" />
+<meta name="viewport" content="width=device-width, initial-scale=1" data-page-node-id="2F02IHHqm7M6v4cluxd6Qq" />
+<title>拍手模拟器</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* 主题变量：浅色 #A1C4FD → #C2E9FB，深色 #9795F0 → #FBC8D4 */
+  :root {   /* 深色模式（默认）：深紫 → 深玫粉渐变（在原紫粉色相上加深） */
+    --grad-1: #41368a;
+    --grad-2: #94486d;
+    --card: rgba(22, 15, 44, .58);
+    --card-2: rgba(255, 255, 255, .09);
+    --btn: rgba(255, 255, 255, .12);
+    --btn-hover: rgba(255, 255, 255, .22);
+    --border: rgba(255, 255, 255, .3);
+    --text: #ffffff;
+    --muted: rgba(255, 255, 255, .75);
+    --accent: #d9c4ff;
+    --accent-rgb: 217, 196, 255;
+    --accent-2: #ffd3e2;
+    --accent2-rgb: 255, 211, 226;
+    --danger: #ff92ab;
+    --danger-rgb: 255, 146, 171;
+    --warn: #ffd9a0;
+    --warn-rgb: 255, 217, 160;
+    --overlay: rgba(16, 9, 34, .62);
+    --primary-text: #46246b;
+    --title-grad: linear-gradient(100deg, #ffffff, #ffd7ea);
+    --shadow: 0 18px 45px rgba(12, 6, 28, .45);
+  }
+
+  html[data-theme="light"] {   /* 浅色模式：蓝 → 青渐变 */
+    --grad-1: #a1c4fd;
+    --grad-2: #c2e9fb;
+    --card: rgba(255, 255, 255, .60);
+    --card-2: rgba(255, 255, 255, .46);
+    --btn: rgba(255, 255, 255, .55);
+    --btn-hover: rgba(255, 255, 255, .85);
+    --border: rgba(255, 255, 255, .75);
+    --text: #223a63;
+    --muted: #4e6690;
+    --accent: #4d74e8;
+    --accent-rgb: 77, 116, 232;
+    --accent-2: #14a3b0;
+    --accent2-rgb: 20, 163, 176;
+    --danger: #e2556b;
+    --danger-rgb: 226, 85, 107;
+    --warn: #c77c14;
+    --warn-rgb: 199, 124, 20;
+    --overlay: rgba(40, 62, 110, .40);
+    --primary-text: #ffffff;
+    --title-grad: linear-gradient(100deg, #3f68e0, #14a3b0);
+    --shadow: 0 18px 45px rgba(70, 110, 190, .22);
+  }
+
+  body {
+    min-height: 100vh;
+    font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", system-ui, -apple-system, sans-serif;
+    color: var(--text);
+    background-image: linear-gradient(135deg, var(--grad-1), var(--grad-2));
+    background-attachment: fixed;
+    transition: color .35s ease;
+    overflow-x: hidden;
+  }
+
+  /* 右上角控制区：语言切换 + 深浅色切换（透明背景，仅圆角矩形边框 + 图标） */
+  .corner-controls {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .corner-btn {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 12px;
+    background: transparent;
+    border: 1.5px solid var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+    color: var(--text);
+    font-family: inherit;
+    transition: border-color .25s ease, transform .25s ease;
+  }
+  .corner-btn:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .corner-btn .ico { color: var(--muted); opacity: .38; transition: color .3s, opacity .3s; }
+  .lang-toggle .ico { color: var(--accent); opacity: 1; }
+  .lang-text { font-size: 12.5px; font-weight: 700; letter-spacing: 1px; min-width: 26px; text-align: center; }
+  html[data-theme="dark"] .theme-toggle .ico-moon,
+  html[data-theme="light"] .theme-toggle .ico-sun { color: var(--accent); opacity: 1; }
+
+  /* MC 语言：招式名更长，按钮与出招框允许自然换行 */
+  html[data-lang="mc"] .diff-btn { font-size: 14px; letter-spacing: 0; }
+  html[data-lang="mc"] .act-btn { line-height: 1.35; }
+  html[data-lang="mc"] .act-btn.breathe { font-size: 13px; letter-spacing: 0; }
+  .act-btn, .fighter-move { word-break: break-word; }
+  .fighter-move { text-align: center; line-height: 1.45; }
+
+  .app { max-width: 760px; margin: 0 auto; padding: 68px 20px 60px; }
+  .screen { display: none; animation: fade .35s ease both; }
+  .screen.active { display: block; }
+  @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  .hero { text-align: center; margin-bottom: 28px; }
+  h1 {
+    font-size: clamp(34px, 6vw, 50px);
+    letter-spacing: 4px;
+    font-weight: 800;
+    background: var(--title-grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .subtitle { margin-top: 10px; color: var(--muted); font-size: 15px; letter-spacing: 1px; }
+  .subtitle .brand {
+    margin-left: 12px;
+    color: var(--accent-2);
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: var(--shadow);
+    margin-bottom: 18px;
+  }
+  .card, .fighter, .actions, .result-card, .toast {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  .card h2 { font-size: 17px; font-weight: 700; letter-spacing: 1px; margin-bottom: 16px; }
+  .card h2::before {
+    content: ""; display: inline-block; width: 4px; height: 15px;
+    border-radius: 3px; background: var(--accent); margin-right: 9px;
+    vertical-align: -2px;
+  }
+
+  .difficulty { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .diff-btn {
+    padding: 15px 8px;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    background: var(--card-2);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    transition: all .2s ease;
+  }
+  .diff-btn small { display: block; margin-top: 6px; font-size: 11px; font-weight: 400; color: var(--muted); }
+  .diff-btn:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .diff-btn.active {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, rgba(var(--accent-rgb), .22), rgba(var(--accent2-rgb), .16));
+    box-shadow: 0 0 0 3px rgba(var(--accent-rgb), .12) inset;
+  }
+  .diff-btn.active small { color: var(--accent); }
+
+  .hint { margin: 14px 0 18px; font-size: 12.5px; color: var(--muted); line-height: 1.7; }
+  .hint-head { display: block; font-size: 13.5px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .hint-tip {
+    display: inline-block; margin-bottom: 9px; padding: 4px 10px;
+    border-radius: 8px; font-size: 12px; font-weight: 600;
+    color: var(--accent); background: rgba(var(--accent-rgb), .14);
+  }
+  .hint-line { display: block; position: relative; padding-left: 14px; margin-top: 4px; }
+  .hint-line::before {
+    content: ""; position: absolute; left: 2px; top: .68em;
+    width: 5px; height: 5px; border-radius: 50%; background: var(--accent); opacity: .8;
+  }
+  .primary {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 13px;
+    background: linear-gradient(100deg, var(--accent), var(--accent-2));
+    color: var(--primary-text);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: transform .2s, filter .2s;
+  }
+  .primary:hover { transform: translateY(-2px); filter: brightness(1.08); }
+  .primary:active { transform: translateY(0); }
+
+  .rules { font-size: 13px; color: var(--muted); line-height: 1.95; }
+  .rules b { color: var(--text); font-weight: 600; }
+  .rules .tag {
+    display: inline-block; padding: 1px 7px; margin-right: 5px;
+    border: 1px solid var(--border); border-radius: 6px; font-size: 11px;
+  }
+
+  .records-head { display: flex; align-items: center; justify-content: space-between; }
+  .records-head h2 { margin-bottom: 0; }
+  .mini-btn {
+    border: 1px solid var(--border); background: transparent; color: var(--muted);
+    border-radius: 9px; padding: 5px 11px; font-size: 12px; cursor: pointer;
+  }
+  .mini-btn:hover { color: var(--danger); border-color: var(--danger); }
+  .stat { margin: 14px 0 10px; font-size: 12.5px; color: var(--muted); }
+  .stat b { color: var(--text); }
+  .record-list { display: flex; flex-direction: column; gap: 9px; }
+  .record {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--card-2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 14px;
+  }
+  .record .badge {
+    flex: none; font-size: 12px; font-weight: 700; padding: 4px 9px;
+    border-radius: 8px; margin-top: 1px;
+  }
+  .badge.win { color: var(--accent-2); background: rgba(var(--accent2-rgb), .14); }
+  .badge.lose { color: var(--danger); background: rgba(var(--danger-rgb), .14); }
+  .record .body { flex: 1; min-width: 0; }
+  .record .line1 { font-size: 13.5px; font-weight: 600; }
+  .record .line2 { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.6; }
+  .record .time { font-size: 11px; color: var(--muted); margin-top: 5px; }
+  .empty { text-align: center; color: var(--muted); font-size: 13px; padding: 18px 0; }
+
+  /* 对战界面 */
+  .battle-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .ghost {
+    background: transparent; color: var(--muted); border: 1px solid var(--border);
+    border-radius: 10px; padding: 8px 13px; font-size: 13px; cursor: pointer;
+  }
+  .ghost:hover { color: var(--text); border-color: var(--accent); }
+  .diff-badge { font-size: 12.5px; color: var(--muted); }
+
+  .arena { display: grid; grid-template-columns: 1fr 84px 1fr; gap: 10px; align-items: stretch; }
+  .fighter {
+    background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+    padding: 20px 16px; text-align: center; box-shadow: var(--shadow);
+    transition: border-color .3s, box-shadow .3s;
+  }
+  .fighter.win-flash { border-color: var(--accent-2); box-shadow: 0 0 0 3px rgba(var(--accent2-rgb), .2), var(--shadow); }
+  .fighter.lose-flash { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(var(--danger-rgb), .2), var(--shadow); }
+  .fighter-tag { font-size: 14px; font-weight: 700; letter-spacing: 1px; }
+  .fighter.ai .fighter-tag { color: var(--danger); }
+  .qi-caption { margin-top: 16px; font-size: 12px; color: var(--muted); letter-spacing: 2px; }
+  .qi-num { font-size: 54px; font-weight: 800; line-height: 1.15; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .fighter.ai .qi-num { color: var(--danger); }
+  .qi-pips { height: 10px; display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
+  .qi-pips i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); opacity: .8; }
+  .fighter.ai .qi-pips i { background: var(--danger); }
+  .fighter-move {
+    margin-top: 18px; padding: 9px 6px; border-radius: 10px;
+    background: var(--card-2); border: 1px dashed var(--border);
+    font-size: 13px; color: var(--muted); min-height: 38px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .fighter-move.atk { color: var(--warn); border-style: solid; border-color: rgba(var(--warn-rgb), .5); }
+  .fighter-move.def { color: var(--accent); border-style: solid; border-color: rgba(var(--accent-rgb), .5); }
+  .fighter-move.bre { color: var(--accent-2); border-style: solid; border-color: rgba(var(--accent2-rgb), .5); }
+  .vs-col { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+  .vs-col span { font-size: 20px; font-weight: 800; letter-spacing: 2px; color: var(--muted); }
+  .vs-col small { font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+  .status {
+    text-align: center; min-height: 22px; margin: 18px 0 4px;
+    font-size: 13.5px; color: var(--muted); line-height: 1.6;
+  }
+  .toast {
+    position: fixed; left: 50%; top: 78px; transform: translate(-50%, -14px);
+    background: var(--card); border: 1px solid rgba(var(--accent-rgb), .7);
+    color: var(--text); padding: 10px 22px; border-radius: 999px;
+    font-size: 13.5px; font-weight: 600; box-shadow: var(--shadow);
+    opacity: 0; pointer-events: none; transition: all .3s ease; z-index: 50;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  .actions {
+    margin-top: 12px; background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 20px; box-shadow: var(--shadow);
+    transition: opacity .25s;
+  }
+  .actions.locked { opacity: .5; pointer-events: none; }
+
+  /* 一级菜单：只保留「吸气 / 防御 / 攻击」三个两字关键字 */
+  .level1 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .cat-btn {
+    position: relative;
+    padding: 17px 8px;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    background: var(--btn);
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    cursor: pointer;
+    transition: transform .18s, border-color .18s, background .18s;
+  }
+  .cat-btn::after {
+    content: "";
+    position: absolute; right: 13px; top: 50%;
+    width: 7px; height: 7px;
+    border-right: 2px solid var(--muted);
+    border-bottom: 2px solid var(--muted);
+    transform: translateY(-70%) rotate(45deg);
+    transition: transform .25s ease;
+  }
+  .cat-btn:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .cat-btn.open {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, rgba(var(--accent-rgb), .22), rgba(var(--accent2-rgb), .14));
+  }
+  .cat-btn.open::after { transform: translateY(-30%) rotate(-135deg); }
+  .cat-btn[data-cat="breathe"].open { border-color: var(--accent-2); }
+  .cat-btn[data-cat="attack"].open { border-color: var(--warn); }
+
+  /* 二级菜单：点击一级按钮展开，同时收起其他展开面板 */
+  .level2 {
+    display: none;
+    margin-top: 14px;
+    padding: 14px;
+    border: 1px dashed var(--border);
+    border-radius: 14px;
+    background: var(--card-2);
+    animation: expand .22s ease both;
+  }
+  .level2.open { display: block; }
+  @keyframes expand { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+  .panel-title { font-size: 12px; color: var(--muted); letter-spacing: 1px; margin-bottom: 11px; }
+  .panel-title b { color: var(--text); font-size: 13px; margin-right: 8px; }
+  .btn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(92px, 1fr)); gap: 9px; }
+  .act-btn {
+    background: var(--btn); color: var(--text);
+    border: 1.5px solid var(--border); border-radius: 12px;
+    padding: 11px 6px; cursor: pointer; font-size: 14px; font-weight: 600;
+    transition: transform .18s, background .18s, border-color .18s, opacity .18s;
+  }
+  .act-btn small { display: block; margin-top: 4px; font-size: 10.5px; font-weight: 400; color: var(--muted); }
+  .act-btn:hover { transform: translateY(-2px); background: var(--btn-hover); border-color: var(--accent); }
+  .act-btn.unaffordable { opacity: .48; }
+  .act-btn.selected { border-color: var(--accent); background: linear-gradient(135deg, rgba(var(--accent-rgb), .24), rgba(var(--accent2-rgb), .14)); }
+  .act-btn.breathe { width: 100%; border-color: rgba(var(--accent2-rgb), .5); }
+  .act-btn.breathe:hover { border-color: var(--accent-2); }
+  .act-btn.attack { border-color: rgba(var(--warn-rgb), .3); }
+  .act-btn.attack:hover { border-color: var(--warn); }
+  .warning { min-height: 20px; margin-top: 14px; text-align: center; font-size: 13px; font-weight: 700; color: var(--warn); }
+  .warning:empty::after { content: ""; }
+
+  /* 对局中的逐回合记录 */
+  .round-log { padding: 18px 20px; }
+  .round-log h2 { margin-bottom: 12px; }
+  .log-count { font-size: 11px; font-weight: 400; color: var(--muted); letter-spacing: 0; margin-left: 6px; }
+  .round-log-list {
+    display: flex; flex-direction: column; gap: 7px;
+    max-height: 200px; overflow-y: auto; padding-right: 3px;
+  }
+  .round-log-list::-webkit-scrollbar { width: 5px; }
+  .round-log-list::-webkit-scrollbar-thumb { background: rgba(var(--accent-rgb), .35); border-radius: 4px; }
+  .log-row {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px;
+    padding: 9px 11px; border: 1px solid var(--border);
+    border-radius: 10px; background: var(--card-2);
+    font-size: 12.5px;
+  }
+  .log-row:last-child { animation: fade .25s ease both; }
+  .log-round { min-width: 58px; font-size: 11px; color: var(--muted); }
+  .log-moves { flex: 1; min-width: 150px; color: var(--text); }
+  .log-moves b { color: var(--accent); font-weight: 600; }
+  .log-qi { font-size: 11px; color: var(--muted); }
+  .log-result {
+    font-size: 11px; color: var(--accent-2);
+    background: rgba(var(--accent2-rgb), .13); padding: 2px 8px; border-radius: 6px;
+  }
+  .log-result.end { color: var(--danger); background: rgba(var(--danger-rgb), .14); }
+  .log-empty { text-align: center; color: var(--muted); font-size: 12px; padding: 14px 0; }
+
+  .overlay {
+    position: fixed; inset: 0; z-index: 80;
+    background: var(--overlay); backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+    opacity: 0; pointer-events: none; transition: opacity .3s;
+  }
+  .overlay.show { opacity: 1; pointer-events: auto; }
+  .result-card {
+    width: 100%; max-width: 420px; text-align: center;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 22px; padding: 32px 26px; box-shadow: var(--shadow);
+    transform: scale(.94); transition: transform .3s;
+  }
+  .overlay.show .result-card { transform: scale(1); }
+  .result-mark {
+    display: inline-block; font-size: 12px; letter-spacing: 3px; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 999px; padding: 5px 14px; margin-bottom: 18px;
+  }
+  .result-card h2 { font-size: 26px; letter-spacing: 2px; margin-bottom: 14px; }
+  .result-card h2.win { color: var(--accent-2); }
+  .result-card h2.lose { color: var(--danger); }
+  .result-card p { font-size: 13.5px; color: var(--muted); line-height: 1.9; margin-bottom: 22px; }
+  .result-tip { margin-top: 13px; font-size: 11.5px; color: var(--muted); }
+
+  @media (max-width: 560px) {
+    .corner-controls { top: 14px; right: 12px; gap: 6px; }
+    .corner-btn { padding: 6px 9px; gap: 6px; }
+    .lang-text { font-size: 12px; min-width: 22px; }
+    .app { padding: 74px 14px 40px; }
+    .arena { grid-template-columns: 1fr 54px 1fr; gap: 6px; }
+    .fighter { padding: 16px 8px; }
+    .qi-num { font-size: 40px; }
+    .fighter-move { font-size: 12px; }
+    .vs-col span { font-size: 15px; }
+    .btn-grid { grid-template-columns: repeat(3, 1fr); }
+    .level1 { gap: 7px; }
+    .cat-btn { font-size: 16px; letter-spacing: 2px; padding: 14px 4px; }
+    .cat-btn::after { right: 8px; }
+    .round-log { padding: 16px; }
+    .log-moves { min-width: 120px; }
+  }
+</style>
+</head>
+<body data-page-node-id="1E9K1GGvN4sGjC9HO0H9Gb">
+
+<div class="corner-controls" data-page-node-id="nsgQhcfxmKk70FZzwofhjC">
+  <button class="corner-btn lang-toggle" id="langToggle" title="当前语言：中文，点击切换" aria-label="切换语言" data-page-node-id="0xeAC3XXu1hB27I6Kix8Xn">
+    <svg class="ico" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="luNycHThmjST1hFM0IvGdF">
+      <path d="M3 5h9M7.5 5v1.8c0 3.6-2 6.7-4.5 8.2M5.5 10c1 2.4 3 4.3 5.5 5.4" data-page-node-id="pDhIBOxQNka8GNvabkgkha"></path>
+      <path d="M13 19l4-10 4 10M14.4 16h5.2" data-page-node-id="QiG8AcvSGt5IjNRpi3Dgdx"></path>
+    </svg>
+    <span class="lang-text" id="langText" data-page-node-id="WzlAZkyj2waXvj1wSISoap">中文</span>
+  </button>
+  <button class="corner-btn theme-toggle" id="themeToggle" title="切换深浅色模式" aria-label="切换深浅色模式" data-page-node-id="Fz1yo00dyhQiqCbAq92Sqs">
+    <svg class="ico ico-sun" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" data-page-node-id="87SqLnIbcpu7SYM7DmxcHb">
+      <circle cx="12" cy="12" r="4" data-page-node-id="T8JIjkkFSMRB2VNoUACtbZ"></circle>
+      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" data-page-node-id="bnd9Nq7iTMBH7wbv4NFrzG"></path>
+    </svg>
+    <svg class="ico ico-moon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" data-page-node-id="P6EPlPmv11ZppFSeumsonh">
+      <path d="M20.5 14.2A8.5 8.5 0 1 1 9.8 3.5a6.8 6.8 0 0 0 10.7 10.7z" data-page-node-id="7PDWrH9XiLRmwHDV6VN0mp"></path>
+    </svg>
+  </button>
+</div>
+
+<div class="app" data-page-node-id="1GOqeiJrvwP1fkkdqfJgX4">
+
+  <!-- ============ 主界面 ============ -->
+  <section id="home" class="screen active" data-page-node-id="ozh0XGVNHLP3jG4HMkCCc3">
+    <div class="hero" data-page-node-id="2Ozh3lzmzvYALfiaEInxz9">
+      <h1 data-page-node-id="nliHfiH8uGirnQm4LRGNFH">拍手模拟器</h1>
+      <p class="subtitle" data-page-node-id="lJJVfIbP1IsQlJjszgN0nu">回合制战斗游戏<span class="brand" data-page-node-id="w9hXxNApXd3FG4zX564PFm">三鑫特色</span></p>
+    </div>
+
+    <div class="card" data-page-node-id="clYw6K6lQyCUdUwm8qoWTa">
+      <h2 data-page-node-id="HJvq96cLEkq80jgTMpaJIc">选择难度</h2>
+      <div class="difficulty" id="difficultyGroup" data-page-node-id="9oBuWB0OvpPhEtZBhGpjI6">
+        <button class="diff-btn" data-diff="low" data-page-node-id="wNnvMkWJe3NEfSRArCLZ3C"><span class="diff-name" data-page-node-id="SNWfeKv3GEiAwxltHRAI4e">低难度</span><small data-page-node-id="4l2AHeQfFmZEaR7w5GFPjY">玩家胜率 60%</small></button>
+        <button class="diff-btn active" data-diff="medium" data-page-node-id="r5b6M0epCOfU4yPQDXNxt7"><span class="diff-name" data-page-node-id="wGQCz8FmxLGzm8Y7osEE8A">中难度</span><small data-page-node-id="gPjgLw0FOBnGSXnPweoRRA">玩家胜率 40%</small></button>
+        <button class="diff-btn" data-diff="high" data-page-node-id="hawqOHRjUg4jA7sF6QDRwI"><span class="diff-name" data-page-node-id="zZkfWR7VoP0ZBCnRa9aPp2">高难度</span><small data-page-node-id="gBPZofTtaK53V8w6VWnGuo">玩家胜率约 15%</small></button>
+      </div>
+      <div class="hint" id="diffHint" data-page-node-id="vq76MQBegDA9WAxoVF9j4B"></div>
+      <button class="primary" id="startBtn" data-page-node-id="ni4PcDgfC6ElnoOUhc4G6B">开始对战</button>
+    </div>
+
+    <div class="card rules" data-page-node-id="EXnK8pFTjtMIVIkYGlHT3v">
+      <h2 data-page-node-id="fWsEG3dNkamk56keZw61qE">游戏规则</h2>
+      <div data-page-node-id="xJejjJqGTD4Lf1ohWNlEdi"><span class="tag" data-page-node-id="BnskCTMF7esUDxObWGzDiF">吸气</span>每吸一口气，自己的气数 <b data-page-node-id="wkJZGv2W5hueWysXUyxPFp">+1</b>；被任意等级的攻击命中时，吸气视为 <b data-page-node-id="5LAWCSdlTZrDCDLGDDzM5H">0 级防御</b>，直接死亡。</div>
+      <div data-page-node-id="L7P0iskZoolUDr576Gu8pe"><span class="tag" data-page-node-id="06HJ9I3FDwE2hFlAB8IHLk">防御</span>x 级防御消耗 <b data-page-node-id="MiOrnK2rHWRtlEC35zD7Wk">x−1 口气</b>（1 级防御消耗 0 口气），防御力 = x，最高 4 级。</div>
+      <div data-page-node-id="h66l7EqCwtagk13F95wlGq"><span class="tag" data-page-node-id="Ib8AmTa05lAmcw0ViCt5jx">攻击</span>y 级攻击消耗 <b data-page-node-id="SNcKQSA7HszwvaVL909uGM">y 口气</b>，攻击力 = y，最高 5 级；<b data-page-node-id="GyAeWZPC26843DuKg2eEjS">5 级只有攻击，没有防御</b>。</div>
+      <div data-page-node-id="GXJVcrW0ROiMsmL0ai0T7L"><span class="tag" data-page-node-id="bAd0jl4RwN9OLjZhA6mHUG">判定</span>攻击力 <b data-page-node-id="pG9AqEDgmgrLYhqpDHBLzw">大于</b> 对方防御力（或对方攻击力）时，对方死亡，本场对战结束；同级攻击双方扣气后继续，<b data-page-node-id="1c51kavingK40GDAJlzpxs">不存在同归于尽</b>。</div>
+      <div data-page-node-id="zI2vhrqpBsjWBCxXI48VBV"><span class="tag" data-page-node-id="CXvIto7i2APjQsLMtd2ZCV">操作</span>二级菜单：先点「吸气 / 防御 / 攻击」，再点具体等级；点开一个分类时，其他分类的展开面板自动收起。</div>
+      <div data-page-node-id="ZCpdL3nR6gZATT35tveVv0"><span class="tag" data-page-node-id="cePGb9LyQrf0ot97dy09Mh">节奏</span>回合间隔 0.3–0.5 秒；气数不足时按攻击会在下方提示「气数不足」，改按其他按钮提示消失。</div>
+    </div>
+
+    <div class="card" data-page-node-id="C8QRfVpLb1DIkFe7Ps87D3">
+      <div class="records-head" data-page-node-id="RaZBtdjk49JgNF2FVXvAG8">
+        <h2 data-page-node-id="gVHFRQ8G0iw2iHhGtEL9GT">对战记录</h2>
+        <button class="mini-btn" id="clearRecords" data-page-node-id="p5cDq4MwUmNTl9HpWS9JHb">清空记录</button>
+      </div>
+      <div class="stat" id="recordStat" data-page-node-id="ANtnfLdSrzvO6ZlcTmlMYh">总场次 <b data-page-node-id="2PdGo0YFV18DJsL7y8hd83">0</b> · 玩家胜 <b data-page-node-id="X7ynkgSJ6J2AtbKDrHYSkQ">0</b> · 人机胜 <b data-page-node-id="GvpWfzSKF3iJvYFLXTAiR9">0</b></div>
+      <div class="record-list" id="recordList" data-page-node-id="O2HvYoY9M4qUEvtLkjMrEu"></div>
+    </div>
+  </section>
+
+  <!-- ============ 对战界面 ============ -->
+  <section id="battle" class="screen" data-page-node-id="ZtzGVxHKzOS9zRsMHzgnn4">
+    <div class="battle-top" data-page-node-id="FiMIZ6A7QpkWxmYvY3PSd0">
+      <button class="ghost" id="backBtn" data-page-node-id="D9rNdyEMTr8fXQMNjUQIuO">← 返回主界面</button>
+      <div class="diff-badge" id="diffBadge" data-page-node-id="ow8cZjcMKX7NniVZg94Vdt">中难度 · 玩家胜率 40%</div>
+    </div>
+
+    <div class="arena" data-page-node-id="Ul94LFvM8NVL97Ktoigk71">
+      <div class="fighter" id="playerCard" data-page-node-id="C80jgmPfNC6e7kEhA4X4By">
+        <div class="fighter-tag" data-page-node-id="Ql2UTousS8ZEL35VdBGcEU">玩家（你）</div>
+        <div class="qi-caption" data-page-node-id="H5ZeZj9oTBVycf3WynSIhG">气 数</div>
+        <div class="qi-num" id="playerQi" data-page-node-id="KGbCZPstH1VFhUwgxFD4QT">0</div>
+        <div class="qi-pips" id="playerPips" data-page-node-id="IScMkqxmNCOOdZ1cMAk9ax"></div>
+        <div class="fighter-move" id="playerMove" data-page-node-id="eBTGHccxA8UFyuoOqWgsIF">待出招</div>
+      </div>
+      <div class="vs-col" data-page-node-id="jTdlCQ7L9CsFTewsXaAVdJ">
+        <span data-page-node-id="uVYZLHszDIr9p47ueNwxtq">VS</span>
+        <small id="roundLabel" data-page-node-id="tvtoeEWabvmOlBuEOaxPCn">第 1 回合</small>
+      </div>
+      <div class="fighter ai" id="aiCard" data-page-node-id="t1ZK51YgpCoFAX6DZC04DF">
+        <div class="fighter-tag" data-page-node-id="zokTeMQ6swK70c2iBU37IE">人机</div>
+        <div class="qi-caption" data-page-node-id="8LYD4wHvimtXsomkf4XikP">气 数</div>
+        <div class="qi-num" id="aiQi" data-page-node-id="I9VlCAOTEE9SElKFMRqDir">0</div>
+        <div class="qi-pips" id="aiPips" data-page-node-id="PHSwe33sMVSHjoaEH7o02W"></div>
+        <div class="fighter-move" id="aiMove" data-page-node-id="wVLfuxZ6zWHIObLnBZNXuK">待出招</div>
+      </div>
+    </div>
+
+    <div class="status" id="status" data-page-node-id="r20Gd6Cvt0Zf7BVWjjrSGK">请选择本回合的动作（先点分类，再点等级）</div>
+
+    <div class="actions" id="actions" data-page-node-id="tRhE3IROpMIrasSiCRLhBj">
+      <!-- 一级菜单：3 个按钮，只保留两字关键字 -->
+      <div class="level1" id="level1" data-page-node-id="Gi45fYv1AhdFYB2XVVmHl4">
+        <button class="cat-btn" data-cat="breathe" data-page-node-id="ii8GiP2F2ksEnUDiEJcCwj">吸气</button>
+        <button class="cat-btn" data-cat="defend" data-page-node-id="VhBpkYevgO3HvEiAS7kEah">防御</button>
+        <button class="cat-btn" data-cat="attack" data-page-node-id="FAnVpMQYloIA1H15RREAKl">攻击</button>
+      </div>
+
+      <!-- 二级菜单：同一时刻只展开其中一个 -->
+      <div class="level2" id="panel-breathe" data-page-node-id="jTLLuOAgxK4o5ypNhWlREn">
+        <div class="panel-title" data-page-node-id="2ez1KBoKTJ68GcAHFXMktI"><b id="panelBreatheName" data-page-node-id="GjBhIODcYbWsCzVG8vNU13">吸气</b>气数 +1 · 相当于 0 级防御</div>
+        <button class="act-btn breathe" data-move="0" data-page-node-id="DAN1JgpM7H8yC8fZQjpaXV">吸气 <small data-page-node-id="4feFZT961ZZBmNugzX7Dik">+1 气</small></button>
+      </div>
+      <div class="level2" id="panel-defend" data-page-node-id="3fCFtmTG923gyLRqVsgcB6">
+        <div class="panel-title" data-page-node-id="ECOe1AXDrCurYuOnKvNQXO"><b id="panelDefendName" data-page-node-id="sLwHQuejQ5ZTMGBeHa7I1N">防御</b>x 级消耗 x−1 口气 · 最高 4 级</div>
+        <div class="btn-grid" id="defendBtns" data-page-node-id="R88HxVnnm1XYBNNsgS0k6e"></div>
+      </div>
+      <div class="level2" id="panel-attack" data-page-node-id="eBnsIFOGGxQWYvu7RQJOQr">
+        <div class="panel-title" data-page-node-id="4k3DA50WPaA7YSbdep1pQn"><b id="panelAttackName" data-page-node-id="s3dCpa27mDCpqFO4QjON9R">攻击</b>y 级消耗 y 口气 · 最高 5 级（5 级无防御）</div>
+        <div class="btn-grid" id="attackBtns" data-page-node-id="CTEzqLAo828IMWJoRQUMGx"></div>
+      </div>
+
+      <div class="warning" id="warning" data-page-node-id="lGhJmyfRAs5fwbvgEVrSTx"></div>
+    </div>
+
+    <!-- 对局中：逐回合记录前几轮双方出了什么 -->
+    <div class="card round-log" data-page-node-id="m3ZOhWacFP0PT2tJ4EcvYF">
+      <h2 data-page-node-id="dhMfexiLE9bjTFZmByqq0D">本局回合记录 <span class="log-count" id="roundLogCount" data-page-node-id="bu5FrZMDOMIFyg74Dcm5pi">0 回合</span></h2>
+      <div class="round-log-list" id="roundLogList" data-page-node-id="oTJ4K4SYb2bJVCKwec0bla"></div>
+    </div>
+  </section>
+
+</div>
+
+<div class="overlay" id="resultOverlay" data-page-node-id="yI3o4XiDJ6tKkK0cFl0QHX">
+  <div class="result-card" data-page-node-id="YXj0nPFeKVuJI2D2A7FVS3">
+    <div class="result-mark" data-page-node-id="DcCvn6Qka8eqxibtxW7z2E">对战结束</div>
+    <h2 id="resultTitle" data-page-node-id="X7rMeDSC3DDiUpd8yC5Ja1">你获胜</h2>
+    <p id="resultDetail" data-page-node-id="RhmqLpYHtd98R5tH8qQOJt"></p>
+    <button class="primary" id="resultBack" data-page-node-id="9yfylITCBM9oNlBI0A8Th2">返回主界面</button>
+    <div class="result-tip" data-page-node-id="03yH3Dn1atOJzlDQT11hpb">出现提示后会自动返回主界面，并在下方显示对战记录</div>
+  </div>
+</div>
+
+<div class="toast" id="toast" data-page-node-id="FDKNHnZo5GoXTzUj2SG9oA"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  const $ = id => document.getElementById(id);
+  const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+  const randInt = (min, max) => Math.floor(min + Math.random() * (max - min + 1));
+
+  /* ---------- 语言：中文 / MC ----------
+     MC 只替换「难度按钮」与「对局招式名」，其余界面文案沿用中文。
+     招式 label / sub 用 getter 动态读取当前语言；记录只存 type:level，
+     因此主界面、对局中、结算弹窗里切换语言都能即时刷新，不留旧语言残留。 */
+  const I18N = {
+    zh: {
+      name: '中文',
+      diff: { low: '低难度', medium: '中难度', high: '高难度' },
+      panel: { breathe: '吸气', defend: '防御', attack: '攻击' }
+    },
+    mc: {
+      name: 'MC',
+      diff: { low: '末地(简单)', medium: '筛界(普通)', high: '下界(困难)' },
+      panel: { breathe: '使用附魔之瓶(吸气)', defend: '伤害吸收 / 抗性提升', attack: '横扫之刃' }
+    }
+  };
+  let language = 'zh';
+
+  /* 难度 = 玩家整场胜率（开局抽签精确控制），人机胜率 = 1 − 玩家胜率
+     低 3/5=60%、中 2/5=40%、高 1/6.5≈15%；
+     head 里的 {D} 会替换成当前语言的难度名，供说明区动态切换 */
+  const DIFF = {
+    low: {
+      playerWin: 3 / 5, text: '玩家胜率 60%',
+      head: '{D} · 玩家胜率 60% · 人机胜率 40%',
+      tip: '大约每 5 局能赢 3 局',
+      desc: [
+        '人机仍会看着你的招式应招，但失误偏多：你出攻击时它常反击差一级，你吸气时也不急着抓破绽。',
+        '适合先熟悉规则：每吸一口气 +1 气，x 级防御耗 x−1 气、y 级攻击耗 y 气，攻击力要「大于」对方防御才会致死。',
+        '建议：先攒 2~3 口气，再用高一级攻击压过它的防御；5 级只有攻击、没有防御。'
+      ]
+    },
+    medium: {
+      playerWin: 2 / 5, text: '玩家胜率 40%',
+      head: '{D} · 玩家胜率 40% · 人机胜率 60%',
+      tip: '大约每 5 局能赢 2 局',
+      desc: [
+        '人机在多数回合认真应对：优先出攻击、不做无用防御、0 气时也会先看清你的动作再决定。',
+        '你吸气时它只要有 1 口气就能用 1 级攻击终结（吸气相当于 0 级防御），别在它有余气时连续吸气。',
+        '建议：用 1~2 级防御骗掉它的气，或攒够气直接出高等级攻击反压；同级攻击只会双方扣气后继续。'
+      ]
+    },
+    high: {
+      playerWin: 1 / 6.5, text: '玩家胜率约 15%',
+      head: '{D} · 玩家胜率约 15% · 人机胜率约 85%',
+      tip: '大约每 6~7 局才能赢 1 局',
+      desc: [
+        '人机几乎全程针对性应招：一发现你吸气就用最低消耗的攻击终结，破不了防时也会主动出攻击施压。',
+        '它会优先选能击杀且最省气的攻击；你出攻击而它无法反杀时，会用同级攻击打平或出防御保命，很难被白嫖。',
+        '建议：藏好吸气时机，多用高等级防御拖掉它的气数，等它气数见底再出致命一击；不存在同归于尽。'
+      ]
+    }
+  };
+
+  const AI_DELAY_MIN = 50, AI_DELAY_MAX = 100;      // 人机近乎同时出招：0.05–0.1 秒
+  const ROUND_GAP_MIN = 300, ROUND_GAP_MAX = 500;   // 回合间隔：0.3–0.5 秒
+
+  /* 招式表：吸气 + 1~4 级防御 + 1~5 级攻击（5 级无防御）
+     MC 语言下：攻击统一「横扫之刃」，1~2 级防御「伤害吸收」，
+     3~4 级防御「抗性提升」，吸气「使用附魔之瓶(吸气)」。
+     同名招式由 small 里的「N 级」区分，数值与判定完全不变。 */
+  function moveLabel(type, level) {
+    if (language === 'mc') {
+      if (type === 'breathe') return '使用附魔之瓶(吸气)';
+      if (type === 'attack') return '横扫之刃';
+      return level <= 2 ? '伤害吸收' : '抗性提升';
+    }
+    return type === 'breathe' ? '吸气' : type === 'defend' ? level + '级防御' : level + '级攻击';
+  }
+  function moveSub(m) {
+    if (language === 'mc' && m.type !== 'breathe') return m.level + ' 级 · 耗 ' + m.cost + ' 气';
+    return m.type === 'breathe' ? '+1 气' : '耗 ' + m.cost + ' 气';
+  }
+  const MOVES = [
+    { type: 'breathe', level: 0, cost: 0,
+      get label() { return moveLabel(this.type, this.level); },
+      get sub() { return moveSub(this); } }
+  ].concat(
+    [1, 2, 3, 4].map(x => ({ type: 'defend', level: x, cost: x - 1,
+      get label() { return moveLabel(this.type, this.level); },
+      get sub() { return moveSub(this); } })),
+    [1, 2, 3, 4, 5].map(y => ({ type: 'attack', level: y, cost: y,
+      get label() { return moveLabel(this.type, this.level); },
+      get sub() { return moveSub(this); } }))
+  );
+  const moveKey = m => m.type + ':' + m.level;
+  function moveFromKey(k) {
+    if (!k || typeof k !== 'string') return null;
+    const i = k.indexOf(':');
+    if (i < 0) return null;
+    const type = k.slice(0, i), level = Number(k.slice(i + 1));
+    return MOVES.find(m => m.type === type && m.level === level) || null;
+  }
+  const diffLabel = key => (I18N[language].diff[key] || I18N.zh.diff[key] || key);
+  function recordDiffLabel(d) {
+    if (I18N.zh.diff[d]) return I18N[language].diff[d];   // 新记录存 low/medium/high
+    const key = Object.keys(I18N.zh.diff).find(k => I18N.zh.diff[k] === d);  // 旧记录存中文名
+    return key ? I18N[language].diff[key] : (d || '');
+  }
+
+  let difficulty = 'medium';
+  let state = null;
+  let matchToken = 0;      // 防止返回主界面后异步流程继续执行
+  let toastTimer = null;
+  let lastResult = null;   // 结算弹窗当前展示的招式，切语言时重算文案
+  let records = loadRecords();
+
+  /* ---------- 主题 ---------- */
+  function applyTheme(theme) {
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem('clap-theme', theme); } catch (e) {}
+  }
+  (function initTheme() {
+    let saved = null;
+    try { saved = localStorage.getItem('clap-theme'); } catch (e) {}
+    applyTheme(saved === 'light' || saved === 'dark' ? saved : 'dark');
+  })();
+  $('themeToggle').addEventListener('click', () => {
+    applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+  });
+
+  /* ---------- 语言切换 ---------- */
+  function applyLanguage(lang) {
+    language = lang === 'mc' ? 'mc' : 'zh';
+    document.documentElement.dataset.lang = language;
+    try { localStorage.setItem('clap-lang', language); } catch (e) {}
+    $('langText').textContent = I18N[language].name;
+    $('langToggle').title = '当前语言：' + I18N[language].name + '，点击切换';
+    $('langToggle').setAttribute('aria-label', $('langToggle').title);
+
+    // 难度按钮文字（保留胜率小字）
+    document.querySelectorAll('.diff-btn').forEach(b => {
+      const s = b.querySelector('.diff-name');
+      if (s) s.textContent = diffLabel(b.dataset.diff);
+    });
+    // 二级菜单标题与吸气按钮
+    $('panelBreatheName').textContent = I18N[language].panel.breathe;
+    $('panelDefendName').textContent = I18N[language].panel.defend;
+    $('panelAttackName').textContent = I18N[language].panel.attack;
+    const breatheBtn = document.querySelector('.act-btn.breathe');
+    if (breatheBtn) breatheBtn.innerHTML = MOVES[0].label + ' <small>' + MOVES[0].sub + '</small>';
+    renderMoveButtons();
+    renderDiffHint();
+
+    // 对局中切换：出招框、回合记录、状态栏、难度徽章同步刷新
+    if (state) {
+      render();
+      if (state.locked && state.playerMove) markButton(state.playerMove);
+      renderMove('player', state.playerMove);
+      renderMove('ai', state.aiMove);
+      renderRoundLog();
+      if (state.detailMoves) {
+        $('status').textContent = describe(state.detailMoves.p, state.detailMoves.a) + '，扣除气数后继续下一回合';
+      }
+    }
+    // 结算弹窗正在显示时也要跟着换语言
+    if (lastResult && $('resultOverlay').classList.contains('show')) {
+      $('resultDetail').textContent = describe(lastResult.pm, lastResult.am) + '。' +
+        (lastResult.winner === 'player' ? '人机死亡，你获胜！' : '你死亡，人机获胜！') + '即将返回主界面…';
+    }
+    renderRecords();
+  }
+  (function initLanguage() {
+    let saved = null;
+    try { saved = localStorage.getItem('clap-lang'); } catch (e) {}
+    applyLanguage(saved === 'mc' ? 'mc' : 'zh');
+  })();
+  $('langToggle').addEventListener('click', () => {
+    applyLanguage(language === 'zh' ? 'mc' : 'zh');
+  });
+
+  /* ---------- 记录 ---------- */
+  function loadRecords() {
+    try { return JSON.parse(localStorage.getItem('clap-records') || '[]'); } catch (e) { return []; }
+  }
+  function saveRecords() {
+    try { localStorage.setItem('clap-records', JSON.stringify(records)); } catch (e) {}
+  }
+  function renderRecords() {
+    const list = $('recordList');
+    const wins = records.filter(r => r.winner === 'player').length;
+    $('recordStat').innerHTML = '总场次 <b>' + records.length + '</b> · 玩家胜 <b>' + wins +
+      '</b> · 人机胜 <b>' + (records.length - wins) + '</b>';
+    if (!records.length) {
+      list.innerHTML = '<div class="empty">暂无对战记录，开始一场对战吧</div>';
+      return;
+    }
+    list.innerHTML = records.map(r => {
+      const win = r.winner === 'player';
+      const d = new Date(r.ts);
+      const time = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' +
+        String(d.getDate()).padStart(2, '0') + ' ' + String(d.getHours()).padStart(2, '0') + ':' +
+        String(d.getMinutes()).padStart(2, '0') + ':' + String(d.getSeconds()).padStart(2, '0');
+      // 新记录存 type:level，按当前语言实时生成招式名与描述；旧记录回退到保存时的文字
+      const pm = moveFromKey(r.pKey), am = moveFromKey(r.aKey);
+      const pLabel = pm ? pm.label : (r.pLabel || '—');
+      const aLabel = am ? am.label : (r.aLabel || '—');
+      const detail = (pm && am) ? describe(pm, am) : (r.detail || '');
+      return '<div class="record">' +
+        '<span class="badge ' + (win ? 'win' : 'lose') + '">' + (win ? '玩家胜' : '人机胜') + '</span>' +
+        '<div class="body">' +
+          '<div class="line1">第 ' + r.round + ' 回合 · 你「' + pLabel + '」 vs 人机「' + aLabel + '」</div>' +
+          '<div class="line2">' + detail + '</div>' +
+          '<div class="time">' + recordDiffLabel(r.diff) + ' · ' + time + '</div>' +
+        '</div></div>';
+    }).join('');
+  }
+  function addRecord(winner, pm, am) {
+    records.unshift({
+      ts: Date.now(), winner: winner, round: state.round,
+      pKey: moveKey(pm), aKey: moveKey(am),
+      diff: difficulty
+    });
+    if (records.length > 40) records.length = 40;
+    saveRecords();
+    renderRecords();
+  }
+
+  /* ---------- 判定 ---------- */
+  // 返回 'player' | 'ai' | null（null = 无人死亡，继续下一回合；不存在同归于尽）
+  function winnerOf(p, a) {
+    const pAtk = p.type === 'attack' ? p.level : 0;
+    const aAtk = a.type === 'attack' ? a.level : 0;
+    const pDef = p.type === 'defend' ? p.level : 0;   // 吸气 / 攻击均视为 0 级防御
+    const aDef = a.type === 'defend' ? a.level : 0;
+    if (pAtk && aAtk) {
+      if (pAtk > aAtk) return 'player';
+      if (aAtk > pAtk) return 'ai';
+      return null;                                    // 同级攻击：扣气后继续
+    }
+    if (pAtk) return pAtk > aDef ? 'player' : null;
+    if (aAtk) return aAtk > pDef ? 'ai' : null;
+    return null;
+  }
+
+  function describe(pm, am) {
+    if (pm.type === 'attack' && am.type === 'attack') {
+      if (pm.level > am.level) return '你的' + pm.label + '（攻击力 ' + pm.level + '）大于人机的' + am.label + '（攻击力 ' + am.level + '）';
+      if (pm.level < am.level) return '人机的' + am.label + '（攻击力 ' + am.level + '）大于你的' + pm.label + '（攻击力 ' + pm.level + '）';
+      return '双方都出了 ' + pm.level + ' 级攻击，攻击力相同，扣除气数后继续';
+    }
+    if (pm.type === 'attack') {
+      if (am.type === 'breathe') return '人机正在吸气（相当于 0 级防御），被你的' + pm.label + '（攻击力 ' + pm.level + '）命中';
+      return '你的' + pm.label + '（攻击力 ' + pm.level + '）' + (pm.level > am.level ? '大于' : '未超过') +
+        '人机的' + am.label + '（防御 ' + am.level + '）';
+    }
+    if (am.type === 'attack') {
+      if (pm.type === 'breathe') return '你正在吸气（相当于 0 级防御），被人机的' + am.label + '（攻击力 ' + am.level + '）命中';
+      return '人机的' + am.label + '（攻击力 ' + am.level + '）' + (am.level > pm.level ? '大于' : '未超过') +
+        '你的' + pm.label + '（防御 ' + pm.level + '）';
+    }
+    return '你' + pm.label + '，人机' + am.label + '，双方均未造成致命一击';
+  }
+
+  /* ---------- 对局中的逐回合记录 ---------- */
+  function briefResult(pm, am, winner) {
+    if (winner === 'player') return '人机死亡 · 你获胜';
+    if (winner === 'ai') return '你死亡 · 人机获胜';
+    if (pm.type === 'attack' && am.type === 'attack') return '攻击力相同 · 继续';
+    if (pm.type === 'attack' || am.type === 'attack') return '攻击被防住 · 继续';
+    if (pm.type === 'breathe' && am.type === 'breathe') return '双方吸气 · 继续';
+    return '双方未分胜负 · 继续';
+  }
+  function renderRoundLog() {
+    const box = $('roundLogList');
+    const log = state ? state.log : [];
+    $('roundLogCount').textContent = log.length + ' 回合';
+    if (!log.length) {
+      box.innerHTML = '<div class="log-empty">出招后，这里会逐回合记录你和人机出了什么</div>';
+      return;
+    }
+    box.innerHTML = log.map(e => {
+      const pm = moveFromKey(e.p), am = moveFromKey(e.a);
+      const pLabel = pm ? pm.label : (e.p || '');
+      const aLabel = am ? am.label : (e.a || '');
+      const result = (pm && am) ? briefResult(pm, am, e.winner) : (e.result || '');
+      return '<div class="log-row">' +
+        '<span class="log-round">第 ' + e.round + ' 回合</span>' +
+        '<span class="log-moves">你 <b>' + pLabel + '</b> · 人机 <b>' + aLabel + '</b></span>' +
+        '<span class="log-qi">气 ' + e.pq + ' / ' + e.aq + '</span>' +
+        '<span class="log-result' + (e.end ? ' end' : '') + '">' + result + '</span>' +
+      '</div>';
+    }).join('');
+    box.scrollTop = box.scrollHeight;   // 始终显示最新一回合
+  }
+
+  /* ---------- 人机决策 ----------
+     人机在玩家出招后 0.05–0.1 秒内「看到」玩家招式再决定，三条原则：
+     1) 不机械「没气就吸气」：0 气遇到 1 级攻击时，出 1 级防御(耗 0 气)就能挡住，吸气必死；
+     2) 玩家没出攻击时绝不出防御（防御无用），只在玩家出攻击时才用防御保命；
+     3) 能攻击就攻击，优先选能击杀且最省气的攻击。
+     难度由开局抽签的胜负归属精确控制玩家胜率；抽到「玩家胜」时人机照样
+     针对玩家应招，只是关键回合会失误（反击差一级 / 攒气时没抓住吸气破绽）。 */
+  function pickTarget() {
+    return Math.random() < DIFF[difficulty].playerWin ? 'player' : 'ai';
+  }
+  // 数值越小越优先：攻击 > 吸气 > 防御，同级按消耗从低到高（省气）
+  function moveScore(m) {
+    return (m.type === 'attack' ? 0 : m.type === 'breathe' ? 1 : 2) * 100 + m.cost;
+  }
+  function pickMove(list, allowDefend) {
+    let pool = allowDefend ? list.slice() : list.filter(m => m.type !== 'defend');
+    if (!pool.length) pool = list.slice();
+    pool.sort((a, b) => moveScore(a) - moveScore(b));
+    const top = pool.slice(0, Math.min(2, pool.length));   // 前两名随机，保留变化
+    return top[Math.floor(Math.random() * top.length)];
+  }
+  function chooseAiMove(pm) {
+    const legal = MOVES.filter(m => m.cost <= state.aiQi);
+    const wins = legal.filter(m => winnerOf(pm, m) === 'ai');
+    const loses = legal.filter(m => winnerOf(pm, m) === 'player');
+    const neutral = legal.filter(m => winnerOf(pm, m) === null);
+    const playerAttacked = pm.type === 'attack';
+
+    // 放水局拖过 16 回合就认真打，避免玩家一直吸气导致对局永不结束
+    const serious = state.target === 'ai' || state.round > 16;
+
+    if (serious) {
+      if (wins.length) return pickMove(wins, false);                 // 能杀：最省气的攻击
+      if (neutral.length) return pickMove(neutral, playerAttacked);  // 玩家攻击时才允许防御保命
+      return pickMove(loses.length ? loses : legal, true);           // 已无活路
+    }
+
+    // 玩家该赢：人机仍看着玩家出招应对，但不会击杀玩家
+    if (playerAttacked) return pickMove(loses.length ? loses : neutral, false); // 反击差一级 / 失手
+    return pickMove(neutral, false);  // 玩家防御或吸气：不出无用防御，也不偷袭吸气中的玩家
+  }
+
+  /* ---------- 界面辅助 ---------- */
+  function renderDiffHint() {
+    const d = DIFF[difficulty];
+    const el = $('diffHint');
+    el.innerHTML = '<span class="hint-head">' + d.head.replace('{D}', diffLabel(difficulty)) + '</span>' +
+      '<span class="hint-tip">' + d.tip + '</span>' +
+      d.desc.map(s => '<span class="hint-line">' + s + '</span>').join('');
+    el.style.animation = 'none';
+    void el.offsetWidth;                       // 重播淡入，切换更明显
+    el.style.animation = 'fade .3s ease both';
+  }
+  function pips(n) {
+    let s = '';
+    for (let i = 0; i < Math.min(n, 8); i++) s += '<i></i>';
+    return s;
+  }
+  function showToast(msg) {
+    const t = $('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 1200);
+  }
+  function showWarning(msg) { $('warning').textContent = msg; }
+  function clearWarning() { $('warning').textContent = ''; }
+  function setButtonsLocked(locked) { $('actions').classList.toggle('locked', locked); }
+  function markButton(move) {
+    document.querySelectorAll('.act-btn').forEach(b => b.classList.remove('selected'));
+    const btn = document.querySelector('.act-btn[data-move="' + MOVES.indexOf(move) + '"]');
+    if (btn) btn.classList.add('selected');
+  }
+  function closeAllPanels() {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('open'));
+    document.querySelectorAll('.level2').forEach(p => p.classList.remove('open'));
+  }
+  function openCategory(cat) {
+    const btn = document.querySelector('.cat-btn[data-cat="' + cat + '"]');
+    const panel = $('panel-' + cat);
+    const wasOpen = panel.classList.contains('open');
+    closeAllPanels();     // 点击某个一级按钮时，其他展开的二级面板收起
+    clearWarning();       // 按其他按钮时取消「气数不足」提示
+    if (!wasOpen) {
+      btn.classList.add('open');
+      panel.classList.add('open');
+    }
+  }
+  function resetButtons() {
+    document.querySelectorAll('.act-btn').forEach(b => b.classList.remove('selected'));
+    closeAllPanels();     // 回合结束后重置按钮、收起二级菜单
+    clearWarning();
+    setButtonsLocked(false);
+  }
+  function renderMove(side, m) {
+    const el = $(side + 'Move');
+    el.textContent = m ? m.label : '待出招';
+    el.className = 'fighter-move' + (m ? ' ' + (m.type === 'attack' ? 'atk' : m.type === 'defend' ? 'def' : 'bre') : '');
+    el.style.animation = m ? 'none' : '';
+  }
+  function render() {
+    if (!state) return;
+    $('playerQi').textContent = state.playerQi;
+    $('aiQi').textContent = state.aiQi;
+    $('playerPips').innerHTML = pips(state.playerQi);
+    $('aiPips').innerHTML = pips(state.aiQi);
+    $('roundLabel').textContent = '第 ' + state.round + ' 回合';
+    $('diffBadge').textContent = diffLabel(difficulty) + ' · ' + DIFF[difficulty].text;
+    document.querySelectorAll('.act-btn[data-move]').forEach(b => {
+      const m = MOVES[Number(b.dataset.move)];
+      b.classList.toggle('unaffordable', m.cost > state.playerQi);
+    });
+  }
+
+  /* ---------- 回合流程 ---------- */
+  async function playRound(move) {
+    if (!state || state.locked) return;
+    clearWarning();   // 按其他按钮时取消「气数不足」提示
+    if (move.cost > state.playerQi) {
+      showWarning('气数不足');   // 0 气时按攻击依旧显示
+      return;
+    }
+
+    const token = matchToken;
+    state.locked = true;
+    state.playerMove = move;
+    markButton(move);
+    setButtonsLocked(true);
+    renderMove('player', move);
+    $('status').textContent = '已出招，人机几乎同时应招…';
+
+    await sleep(randInt(AI_DELAY_MIN, AI_DELAY_MAX));
+    if (token !== matchToken) return;
+
+    const am = chooseAiMove(move);
+    state.aiMove = am;
+    renderMove('ai', am);
+
+    const winner = winnerOf(move, am);
+    // 结算气数：吸气 +1，防御 / 攻击按等级扣除
+    state.playerQi += move.type === 'breathe' ? 1 : -move.cost;
+    state.aiQi += am.type === 'breathe' ? 1 : -am.cost;
+    render();
+
+    // 记录本回合双方招式（只存标识，渲染时按当前语言取名）、结算后气数与胜负
+    state.log.push({
+      round: state.round, p: moveKey(move), a: moveKey(am), winner: winner,
+      pq: state.playerQi, aq: state.aiQi, end: !!winner
+    });
+    renderRoundLog();
+
+    if (winner) {
+      finishMatch(winner, move, am, token);
+      return;
+    }
+
+    const detail = describe(move, am);
+    state.detailMoves = { p: move, a: am };   // 供切语言时重算状态栏
+    $('status').textContent = detail + '，扣除气数后继续下一回合';
+    showToast('已进入下一回合');
+
+    await sleep(randInt(ROUND_GAP_MIN, ROUND_GAP_MAX));
+    if (token !== matchToken) return;
+
+    state.round += 1;
+    state.playerMove = null;
+    state.aiMove = null;
+    state.detailMoves = null;
+    resetButtons();                    // 回合结束后重置底部按钮
+    state.locked = false;
+    renderMove('player', null);
+    renderMove('ai', null);
+    $('playerCard').classList.remove('win-flash', 'lose-flash');
+    $('aiCard').classList.remove('win-flash', 'lose-flash');
+    $('status').textContent = '请选择本回合的动作（先点分类，再点等级）';
+    render();
+  }
+
+  function finishMatch(winner, pm, am, token) {
+    const playerWin = winner === 'player';
+    const detail = describe(pm, am);
+    lastResult = { winner: winner, pm: pm, am: am };   // 切语言时重算弹窗文案
+    $('playerCard').classList.add(playerWin ? 'win-flash' : 'lose-flash');
+    $('aiCard').classList.add(playerWin ? 'lose-flash' : 'win-flash');
+    setButtonsLocked(true);
+    $('status').textContent = playerWin ? '人机死亡，本场对战结束' : '你已死亡，本场对战结束';
+
+    $('resultTitle').textContent = playerWin ? '你获胜 · 人机死亡' : '人机获胜 · 你死亡';
+    $('resultTitle').className = playerWin ? 'win' : 'lose';
+    $('resultDetail').textContent = detail + '。' + (playerWin ? '人机死亡，你获胜！' : '你死亡，人机获胜！') + '即将返回主界面…';
+    $('resultOverlay').classList.add('show');
+
+    addRecord(winner, pm, am);
+    setTimeout(() => { if (token === matchToken) backHome(); }, 2300);
+  }
+
+  /* ---------- 主界面 / 对战界面切换 ---------- */
+  function startMatch() {
+    matchToken += 1;
+    lastResult = null;
+    state = {
+      round: 1, playerQi: 0, aiQi: 0,
+      playerMove: null, aiMove: null, detailMoves: null,
+      locked: false, target: pickTarget(), log: []
+    };
+    $('resultOverlay').classList.remove('show');
+    $('playerCard').classList.remove('win-flash', 'lose-flash');
+    $('aiCard').classList.remove('win-flash', 'lose-flash');
+    $('home').classList.remove('active');
+    $('battle').classList.add('active');
+    renderMove('player', null);
+    renderMove('ai', null);
+    $('status').textContent = '请选择本回合的动作（先点分类，再点等级）';
+    resetButtons();
+    renderRoundLog();
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function backHome() {
+    matchToken += 1;
+    state = null;
+    lastResult = null;
+    $('resultOverlay').classList.remove('show');
+    $('battle').classList.remove('active');
+    $('home').classList.add('active');
+    renderRecords();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ---------- 初始化按钮 ----------
+     事件委托绑在 #actions 上：切换语言重建二级按钮后无需重新绑定 */
+  function renderMoveButtons() {
+    const btnHtml = m => '<button class="act-btn ' + (m.type === 'attack' ? 'attack' : 'defend') +
+      '" data-move="' + MOVES.indexOf(m) + '">' + m.label + '<small>' + m.sub + '</small></button>';
+    $('defendBtns').innerHTML = MOVES.filter(m => m.type === 'defend').map(btnHtml).join('');
+    $('attackBtns').innerHTML = MOVES.filter(m => m.type === 'attack').map(btnHtml).join('');
+  }
+  (function buildButtons() {
+    $('actions').addEventListener('click', e => {
+      const btn = e.target.closest('.act-btn[data-move]');
+      if (btn) playRound(MOVES[Number(btn.dataset.move)]);
+    });
+    document.querySelectorAll('.cat-btn').forEach(b => {
+      b.addEventListener('click', () => openCategory(b.dataset.cat));
+    });
+  })();
+
+  document.querySelectorAll('.diff-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      difficulty = b.dataset.diff;
+      document.querySelectorAll('.diff-btn').forEach(x => x.classList.toggle('active', x === b));
+      renderDiffHint();          // 点击难度时切换下方说明
+    });
+  });
+  $('startBtn').addEventListener('click', startMatch);
+  $('backBtn').addEventListener('click', backHome);
+  $('resultBack').addEventListener('click', backHome);
+  $('clearRecords').addEventListener('click', () => {
+    records = [];
+    saveRecords();
+    renderRecords();
+  });
+
+  renderDiffHint();
+  renderRecords();
+})();
+</script>
+</body>
+</html>
