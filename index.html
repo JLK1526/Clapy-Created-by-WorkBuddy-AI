@@ -4,6 +4,11 @@
 <meta charset="UTF-8" data-page-node-id="jXm4NTIh4yhyUfCyrFCqwE" />
 <meta name="viewport" content="width=device-width, initial-scale=1" data-page-node-id="2F02IHHqm7M6v4cluxd6Qq" />
 <title>拍手模拟器</title>
+<!-- 站点图标：ICO 兼容所有浏览器，SVG 供现代浏览器矢量显示，PNG 供移动设备添加到桌面 -->
+<link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="256x256" href="favicon.png" />
+<link rel="apple-touch-icon" href="favicon.png" />
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -115,6 +120,22 @@
   @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
   .hero { text-align: center; margin-bottom: 28px; }
+  .hero-logo {
+    display: block;
+    width: 82px;
+    height: 82px;
+    margin: 0 auto 16px;
+    border-radius: 22px;
+    box-shadow: 0 12px 28px rgba(12, 6, 28, .32);
+    user-select: none;
+    -webkit-user-drag: none;
+    animation: logoIn .5s ease both;
+  }
+  html[data-theme="light"] .hero-logo { box-shadow: 0 12px 28px rgba(70, 36, 107, .22); }
+  @keyframes logoIn {
+    from { opacity: 0; transform: translateY(-10px) scale(.88); }
+    to { opacity: 1; transform: none; }
+  }
   h1 {
     font-size: clamp(34px, 6vw, 50px);
     letter-spacing: 4px;
@@ -414,6 +435,7 @@
     .corner-btn { padding: 6px 9px; gap: 6px; }
     .lang-text { font-size: 12px; min-width: 22px; }
     .app { padding: 74px 14px 40px; }
+    .hero-logo { width: 66px; height: 66px; margin-bottom: 12px; border-radius: 18px; }
     .arena { grid-template-columns: 1fr 54px 1fr; gap: 6px; }
     .fighter { padding: 16px 8px; }
     .qi-num { font-size: 40px; }
@@ -455,6 +477,7 @@
   <!-- ============ 主界面 ============ -->
   <section id="home" class="screen active" data-page-node-id="ozh0XGVNHLP3jG4HMkCCc3">
     <div class="hero" data-page-node-id="2Ozh3lzmzvYALfiaEInxz9">
+      <img class="hero-logo" src="favicon.svg" alt="" aria-hidden="true" />
       <h1 id="heroTitle" data-page-node-id="nliHfiH8uGirnQm4LRGNFH">拍手模拟器</h1>
       <p class="subtitle" data-page-node-id="lJJVfIbP1IsQlJjszgN0nu"><span id="subtitleText">回合制战斗游戏</span><span class="brand" id="brandText" data-page-node-id="w9hXxNApXd3FG4zX564PFm">三鑫特色</span></p>
     </div>
