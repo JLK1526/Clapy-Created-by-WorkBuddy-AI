@@ -100,6 +100,12 @@
   html[data-lang="mc"] .diff-btn { font-size: 14px; letter-spacing: 0; }
   html[data-lang="mc"] .act-btn { line-height: 1.35; }
   html[data-lang="mc"] .act-btn.breathe { font-size: 13px; letter-spacing: 0; }
+  /* 英文模式：单词比汉字长，收紧字距、缩小按钮字号 */
+  html[data-lang="en"] .cat-btn { font-size: 15px; letter-spacing: 1px; }
+  html[data-lang="en"] .act-btn { font-size: 13px; line-height: 1.3; }
+  html[data-lang="en"] .primary { letter-spacing: 1px; }
+  html[data-lang="en"] .fighter-tag { letter-spacing: 0; }
+  html[data-lang="en"] .result-mark { letter-spacing: 2px; }
   .act-btn, .fighter-move { word-break: break-word; }
   .fighter-move { text-align: center; line-height: 1.45; }
 
@@ -416,6 +422,7 @@
     .btn-grid { grid-template-columns: repeat(3, 1fr); }
     .level1 { gap: 7px; }
     .cat-btn { font-size: 16px; letter-spacing: 2px; padding: 14px 4px; }
+    html[data-lang="en"] .cat-btn { font-size: 12px; letter-spacing: 0; }
     .cat-btn::after { right: 8px; }
     .round-log { padding: 16px; }
     .log-moves { min-width: 120px; }
@@ -448,34 +455,34 @@
   <!-- ============ 主界面 ============ -->
   <section id="home" class="screen active" data-page-node-id="ozh0XGVNHLP3jG4HMkCCc3">
     <div class="hero" data-page-node-id="2Ozh3lzmzvYALfiaEInxz9">
-      <h1 data-page-node-id="nliHfiH8uGirnQm4LRGNFH">拍手模拟器</h1>
-      <p class="subtitle" data-page-node-id="lJJVfIbP1IsQlJjszgN0nu">回合制战斗游戏<span class="brand" data-page-node-id="w9hXxNApXd3FG4zX564PFm">三鑫特色</span></p>
+      <h1 id="heroTitle" data-page-node-id="nliHfiH8uGirnQm4LRGNFH">拍手模拟器</h1>
+      <p class="subtitle" data-page-node-id="lJJVfIbP1IsQlJjszgN0nu"><span id="subtitleText">回合制战斗游戏</span><span class="brand" id="brandText" data-page-node-id="w9hXxNApXd3FG4zX564PFm">三鑫特色</span></p>
     </div>
 
     <div class="card" data-page-node-id="clYw6K6lQyCUdUwm8qoWTa">
-      <h2 data-page-node-id="HJvq96cLEkq80jgTMpaJIc">选择难度</h2>
+      <h2 id="diffTitle" data-page-node-id="HJvq96cLEkq80jgTMpaJIc">选择难度</h2>
       <div class="difficulty" id="difficultyGroup" data-page-node-id="9oBuWB0OvpPhEtZBhGpjI6">
-        <button class="diff-btn" data-diff="low" data-page-node-id="wNnvMkWJe3NEfSRArCLZ3C"><span class="diff-name" data-page-node-id="SNWfeKv3GEiAwxltHRAI4e">低难度</span><small data-page-node-id="4l2AHeQfFmZEaR7w5GFPjY">玩家胜率 60%</small></button>
-        <button class="diff-btn active" data-diff="medium" data-page-node-id="r5b6M0epCOfU4yPQDXNxt7"><span class="diff-name" data-page-node-id="wGQCz8FmxLGzm8Y7osEE8A">中难度</span><small data-page-node-id="gPjgLw0FOBnGSXnPweoRRA">玩家胜率 40%</small></button>
-        <button class="diff-btn" data-diff="high" data-page-node-id="hawqOHRjUg4jA7sF6QDRwI"><span class="diff-name" data-page-node-id="zZkfWR7VoP0ZBCnRa9aPp2">高难度</span><small data-page-node-id="gBPZofTtaK53V8w6VWnGuo">玩家胜率约 15%</small></button>
+        <button class="diff-btn" data-diff="low" data-page-node-id="wNnvMkWJe3NEfSRArCLZ3C"><span class="diff-name" data-page-node-id="SNWfeKv3GEiAwxltHRAI4e">低难度</span><small id="diffSmallLow" data-page-node-id="4l2AHeQfFmZEaR7w5GFPjY">玩家胜率 60%</small></button>
+        <button class="diff-btn active" data-diff="medium" data-page-node-id="r5b6M0epCOfU4yPQDXNxt7"><span class="diff-name" data-page-node-id="wGQCz8FmxLGzm8Y7osEE8A">中难度</span><small id="diffSmallMedium" data-page-node-id="gPjgLw0FOBnGSXnPweoRRA">玩家胜率 40%</small></button>
+        <button class="diff-btn" data-diff="high" data-page-node-id="hawqOHRjUg4jA7sF6QDRwI"><span class="diff-name" data-page-node-id="zZkfWR7VoP0ZBCnRa9aPp2">高难度</span><small id="diffSmallHigh" data-page-node-id="gBPZofTtaK53V8w6VWnGuo">玩家胜率约 15%</small></button>
       </div>
       <div class="hint" id="diffHint" data-page-node-id="vq76MQBegDA9WAxoVF9j4B"></div>
       <button class="primary" id="startBtn" data-page-node-id="ni4PcDgfC6ElnoOUhc4G6B">开始对战</button>
     </div>
 
     <div class="card rules" data-page-node-id="EXnK8pFTjtMIVIkYGlHT3v">
-      <h2 data-page-node-id="fWsEG3dNkamk56keZw61qE">游戏规则</h2>
-      <div data-page-node-id="xJejjJqGTD4Lf1ohWNlEdi"><span class="tag" data-page-node-id="BnskCTMF7esUDxObWGzDiF">吸气</span>每吸一口气，自己的气数 <b data-page-node-id="wkJZGv2W5hueWysXUyxPFp">+1</b>；被任意等级的攻击命中时，吸气视为 <b data-page-node-id="5LAWCSdlTZrDCDLGDDzM5H">0 级防御</b>，直接死亡。</div>
-      <div data-page-node-id="L7P0iskZoolUDr576Gu8pe"><span class="tag" data-page-node-id="06HJ9I3FDwE2hFlAB8IHLk">防御</span>x 级防御消耗 <b data-page-node-id="MiOrnK2rHWRtlEC35zD7Wk">x−1 口气</b>（1 级防御消耗 0 口气），防御力 = x，最高 4 级。</div>
-      <div data-page-node-id="h66l7EqCwtagk13F95wlGq"><span class="tag" data-page-node-id="Ib8AmTa05lAmcw0ViCt5jx">攻击</span>y 级攻击消耗 <b data-page-node-id="SNcKQSA7HszwvaVL909uGM">y 口气</b>，攻击力 = y，最高 5 级；<b data-page-node-id="GyAeWZPC26843DuKg2eEjS">5 级只有攻击，没有防御</b>。</div>
-      <div data-page-node-id="GXJVcrW0ROiMsmL0ai0T7L"><span class="tag" data-page-node-id="bAd0jl4RwN9OLjZhA6mHUG">判定</span>攻击力 <b data-page-node-id="pG9AqEDgmgrLYhqpDHBLzw">大于</b> 对方防御力（或对方攻击力）时，对方死亡，本场对战结束；同级攻击双方扣气后继续，<b data-page-node-id="1c51kavingK40GDAJlzpxs">不存在同归于尽</b>。</div>
-      <div data-page-node-id="zI2vhrqpBsjWBCxXI48VBV"><span class="tag" data-page-node-id="CXvIto7i2APjQsLMtd2ZCV">操作</span>二级菜单：先点「吸气 / 防御 / 攻击」，再点具体等级；点开一个分类时，其他分类的展开面板自动收起。</div>
-      <div data-page-node-id="ZCpdL3nR6gZATT35tveVv0"><span class="tag" data-page-node-id="cePGb9LyQrf0ot97dy09Mh">节奏</span>回合间隔 0.3–0.5 秒；气数不足时按攻击会在下方提示「气数不足」，改按其他按钮提示消失。</div>
+      <h2 id="rulesTitle" data-page-node-id="fWsEG3dNkamk56keZw61qE">游戏规则</h2>
+      <div id="rule1" data-page-node-id="xJejjJqGTD4Lf1ohWNlEdi"><span class="tag" data-page-node-id="BnskCTMF7esUDxObWGzDiF">吸气</span>每吸一口气，自己的气数 <b data-page-node-id="wkJZGv2W5hueWysXUyxPFp">+1</b>；被任意等级的攻击命中时，吸气视为 <b data-page-node-id="5LAWCSdlTZrDCDLGDDzM5H">0 级防御</b>，直接死亡。</div>
+      <div id="rule2" data-page-node-id="L7P0iskZoolUDr576Gu8pe"><span class="tag" data-page-node-id="06HJ9I3FDwE2hFlAB8IHLk">防御</span>x 级防御消耗 <b data-page-node-id="MiOrnK2rHWRtlEC35zD7Wk">x−1 口气</b>（1 级防御消耗 0 口气），防御力 = x，最高 4 级。</div>
+      <div id="rule3" data-page-node-id="h66l7EqCwtagk13F95wlGq"><span class="tag" data-page-node-id="Ib8AmTa05lAmcw0ViCt5jx">攻击</span>y 级攻击消耗 <b data-page-node-id="SNcKQSA7HszwvaVL909uGM">y 口气</b>，攻击力 = y，最高 5 级；<b data-page-node-id="GyAeWZPC26843DuKg2eEjS">5 级只有攻击，没有防御</b>。</div>
+      <div id="rule4" data-page-node-id="GXJVcrW0ROiMsmL0ai0T7L"><span class="tag" data-page-node-id="bAd0jl4RwN9OLjZhA6mHUG">判定</span>攻击力 <b data-page-node-id="pG9AqEDgmgrLYhqpDHBLzw">大于</b> 对方防御力（或对方攻击力）时，对方死亡，本场对战结束；同级攻击双方扣气后继续，<b data-page-node-id="1c51kavingK40GDAJlzpxs">不存在同归于尽</b>。</div>
+      <div id="rule5" data-page-node-id="zI2vhrqpBsjWBCxXI48VBV"><span class="tag" data-page-node-id="CXvIto7i2APjQsLMtd2ZCV">操作</span>二级菜单：先点「吸气 / 防御 / 攻击」，再点具体等级；点开一个分类时，其他分类的展开面板自动收起。</div>
+      <div id="rule6" data-page-node-id="ZCpdL3nR6gZATT35tveVv0"><span class="tag" data-page-node-id="cePGb9LyQrf0ot97dy09Mh">节奏</span>回合间隔 0.3–0.5 秒；气数不足时按攻击会在下方提示「气数不足」，改按其他按钮提示消失。</div>
     </div>
 
     <div class="card" data-page-node-id="C8QRfVpLb1DIkFe7Ps87D3">
       <div class="records-head" data-page-node-id="RaZBtdjk49JgNF2FVXvAG8">
-        <h2 data-page-node-id="gVHFRQ8G0iw2iHhGtEL9GT">对战记录</h2>
+        <h2 id="recordsTitle" data-page-node-id="gVHFRQ8G0iw2iHhGtEL9GT">对战记录</h2>
         <button class="mini-btn" id="clearRecords" data-page-node-id="p5cDq4MwUmNTl9HpWS9JHb">清空记录</button>
       </div>
       <div class="stat" id="recordStat" data-page-node-id="ANtnfLdSrzvO6ZlcTmlMYh">总场次 <b data-page-node-id="2PdGo0YFV18DJsL7y8hd83">0</b> · 玩家胜 <b data-page-node-id="X7ynkgSJ6J2AtbKDrHYSkQ">0</b> · 人机胜 <b data-page-node-id="GvpWfzSKF3iJvYFLXTAiR9">0</b></div>
@@ -492,8 +499,8 @@
 
     <div class="arena" data-page-node-id="Ul94LFvM8NVL97Ktoigk71">
       <div class="fighter" id="playerCard" data-page-node-id="C80jgmPfNC6e7kEhA4X4By">
-        <div class="fighter-tag" data-page-node-id="Ql2UTousS8ZEL35VdBGcEU">玩家（你）</div>
-        <div class="qi-caption" data-page-node-id="H5ZeZj9oTBVycf3WynSIhG">气 数</div>
+        <div class="fighter-tag" id="playerTag" data-page-node-id="Ql2UTousS8ZEL35VdBGcEU">玩家（你）</div>
+        <div class="qi-caption" id="playerQiCaption" data-page-node-id="H5ZeZj9oTBVycf3WynSIhG">气 数</div>
         <div class="qi-num" id="playerQi" data-page-node-id="KGbCZPstH1VFhUwgxFD4QT">0</div>
         <div class="qi-pips" id="playerPips" data-page-node-id="IScMkqxmNCOOdZ1cMAk9ax"></div>
         <div class="fighter-move" id="playerMove" data-page-node-id="eBTGHccxA8UFyuoOqWgsIF">待出招</div>
@@ -503,8 +510,8 @@
         <small id="roundLabel" data-page-node-id="tvtoeEWabvmOlBuEOaxPCn">第 1 回合</small>
       </div>
       <div class="fighter ai" id="aiCard" data-page-node-id="t1ZK51YgpCoFAX6DZC04DF">
-        <div class="fighter-tag" data-page-node-id="zokTeMQ6swK70c2iBU37IE">人机</div>
-        <div class="qi-caption" data-page-node-id="8LYD4wHvimtXsomkf4XikP">气 数</div>
+        <div class="fighter-tag" id="aiTag" data-page-node-id="zokTeMQ6swK70c2iBU37IE">人机</div>
+        <div class="qi-caption" id="aiQiCaption" data-page-node-id="8LYD4wHvimtXsomkf4XikP">气 数</div>
         <div class="qi-num" id="aiQi" data-page-node-id="I9VlCAOTEE9SElKFMRqDir">0</div>
         <div class="qi-pips" id="aiPips" data-page-node-id="PHSwe33sMVSHjoaEH7o02W"></div>
         <div class="fighter-move" id="aiMove" data-page-node-id="wVLfuxZ6zWHIObLnBZNXuK">待出招</div>
@@ -516,22 +523,22 @@
     <div class="actions" id="actions" data-page-node-id="tRhE3IROpMIrasSiCRLhBj">
       <!-- 一级菜单：3 个按钮，只保留两字关键字 -->
       <div class="level1" id="level1" data-page-node-id="Gi45fYv1AhdFYB2XVVmHl4">
-        <button class="cat-btn" data-cat="breathe" data-page-node-id="ii8GiP2F2ksEnUDiEJcCwj">吸气</button>
-        <button class="cat-btn" data-cat="defend" data-page-node-id="VhBpkYevgO3HvEiAS7kEah">防御</button>
-        <button class="cat-btn" data-cat="attack" data-page-node-id="FAnVpMQYloIA1H15RREAKl">攻击</button>
+        <button class="cat-btn" id="catBreathe" data-cat="breathe" data-page-node-id="ii8GiP2F2ksEnUDiEJcCwj">吸气</button>
+        <button class="cat-btn" id="catDefend" data-cat="defend" data-page-node-id="VhBpkYevgO3HvEiAS7kEah">防御</button>
+        <button class="cat-btn" id="catAttack" data-cat="attack" data-page-node-id="FAnVpMQYloIA1H15RREAKl">攻击</button>
       </div>
 
       <!-- 二级菜单：同一时刻只展开其中一个 -->
       <div class="level2" id="panel-breathe" data-page-node-id="jTLLuOAgxK4o5ypNhWlREn">
-        <div class="panel-title" data-page-node-id="2ez1KBoKTJ68GcAHFXMktI"><b id="panelBreatheName" data-page-node-id="GjBhIODcYbWsCzVG8vNU13">吸气</b>气数 +1 · 相当于 0 级防御</div>
+        <div class="panel-title" data-page-node-id="2ez1KBoKTJ68GcAHFXMktI"><b id="panelBreatheName" data-page-node-id="GjBhIODcYbWsCzVG8vNU13">吸气</b><span id="panelBreatheNote">气数 +1 · 相当于 0 级防御</span></div>
         <button class="act-btn breathe" data-move="0" data-page-node-id="DAN1JgpM7H8yC8fZQjpaXV">吸气 <small data-page-node-id="4feFZT961ZZBmNugzX7Dik">+1 气</small></button>
       </div>
       <div class="level2" id="panel-defend" data-page-node-id="3fCFtmTG923gyLRqVsgcB6">
-        <div class="panel-title" data-page-node-id="ECOe1AXDrCurYuOnKvNQXO"><b id="panelDefendName" data-page-node-id="sLwHQuejQ5ZTMGBeHa7I1N">防御</b>x 级消耗 x−1 口气 · 最高 4 级</div>
+        <div class="panel-title" data-page-node-id="ECOe1AXDrCurYuOnKvNQXO"><b id="panelDefendName" data-page-node-id="sLwHQuejQ5ZTMGBeHa7I1N">防御</b><span id="panelDefendNote">x 级消耗 x−1 口气 · 最高 4 级</span></div>
         <div class="btn-grid" id="defendBtns" data-page-node-id="R88HxVnnm1XYBNNsgS0k6e"></div>
       </div>
       <div class="level2" id="panel-attack" data-page-node-id="eBnsIFOGGxQWYvu7RQJOQr">
-        <div class="panel-title" data-page-node-id="4k3DA50WPaA7YSbdep1pQn"><b id="panelAttackName" data-page-node-id="s3dCpa27mDCpqFO4QjON9R">攻击</b>y 级消耗 y 口气 · 最高 5 级（5 级无防御）</div>
+        <div class="panel-title" data-page-node-id="4k3DA50WPaA7YSbdep1pQn"><b id="panelAttackName" data-page-node-id="s3dCpa27mDCpqFO4QjON9R">攻击</b><span id="panelAttackNote">y 级消耗 y 口气 · 最高 5 级（5 级无防御）</span></div>
         <div class="btn-grid" id="attackBtns" data-page-node-id="CTEzqLAo828IMWJoRQUMGx"></div>
       </div>
 
@@ -540,7 +547,7 @@
 
     <!-- 对局中：逐回合记录前几轮双方出了什么 -->
     <div class="card round-log" data-page-node-id="m3ZOhWacFP0PT2tJ4EcvYF">
-      <h2 data-page-node-id="dhMfexiLE9bjTFZmByqq0D">本局回合记录 <span class="log-count" id="roundLogCount" data-page-node-id="bu5FrZMDOMIFyg74Dcm5pi">0 回合</span></h2>
+      <h2 data-page-node-id="dhMfexiLE9bjTFZmByqq0D"><span id="logTitle">本局回合记录</span> <span class="log-count" id="roundLogCount" data-page-node-id="bu5FrZMDOMIFyg74Dcm5pi">0 回合</span></h2>
       <div class="round-log-list" id="roundLogList" data-page-node-id="oTJ4K4SYb2bJVCKwec0bla"></div>
     </div>
   </section>
@@ -549,11 +556,11 @@
 
 <div class="overlay" id="resultOverlay" data-page-node-id="yI3o4XiDJ6tKkK0cFl0QHX">
   <div class="result-card" data-page-node-id="YXj0nPFeKVuJI2D2A7FVS3">
-    <div class="result-mark" data-page-node-id="DcCvn6Qka8eqxibtxW7z2E">对战结束</div>
+    <div class="result-mark" id="resultMark" data-page-node-id="DcCvn6Qka8eqxibtxW7z2E">对战结束</div>
     <h2 id="resultTitle" data-page-node-id="X7rMeDSC3DDiUpd8yC5Ja1">你获胜</h2>
     <p id="resultDetail" data-page-node-id="RhmqLpYHtd98R5tH8qQOJt"></p>
     <button class="primary" id="resultBack" data-page-node-id="9yfylITCBM9oNlBI0A8Th2">返回主界面</button>
-    <div class="result-tip" data-page-node-id="03yH3Dn1atOJzlDQT11hpb">出现提示后会自动返回主界面，并在下方显示对战记录</div>
+    <div class="result-tip" id="resultTip" data-page-node-id="03yH3Dn1atOJzlDQT11hpb">出现提示后会自动返回主界面，并在下方显示对战记录</div>
   </div>
 </div>
 
@@ -566,58 +573,233 @@
   const $ = id => document.getElementById(id);
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
   const randInt = (min, max) => Math.floor(min + Math.random() * (max - min + 1));
+  const fmt = (s, v) => String(s).replace(/\{(\w+)\}/g, (m, k) => (v && v[k] !== undefined ? v[k] : m));
 
-  /* ---------- 语言：中文 / MC ----------
-     MC 只替换「难度按钮」与「对局招式名」，其余界面文案沿用中文。
-     招式 label / sub 用 getter 动态读取当前语言；记录只存 type:level，
-     因此主界面、对局中、结算弹窗里切换语言都能即时刷新，不留旧语言残留。 */
-  const I18N = {
+  /* ---------- 三语言字典 ----------
+     zh 为基准；mc 只覆盖 MC 专属词（难度名 / 面板名 / 招式名），其余自动回退中文，
+     因此中文与 MC 两套既有行为完全不变；en 提供全量英文，切换后整个界面无中文。
+     所有动态文本统一走 T() / fmt()，记录只存 type:level 与难度 key，切语言即时重渲染。 */
+  const DICT = {
     zh: {
-      name: '中文',
-      diff: { low: '低难度', medium: '中难度', high: '高难度' },
-      panel: { breathe: '吸气', defend: '防御', attack: '攻击' }
+      name: '中文', htmlLang: 'zh-CN', docTitle: '拍手模拟器',
+      title: '拍手模拟器', subtitle: '回合制战斗游戏', brand: '三鑫特色',
+      langTitle: '当前语言：{N}，点击切换', langAria: '切换语言',
+      themeTitle: '切换深浅色模式', themeAria: '切换深浅色模式',
+
+      diffTitle: '选择难度',
+      diff_low: '低难度', diff_medium: '中难度', diff_high: '高难度',
+      diffText_low: '玩家胜率 60%', diffText_medium: '玩家胜率 40%', diffText_high: '玩家胜率约 15%',
+      hintHead_low: '{D} · 玩家胜率 60% · 人机胜率 40%',
+      hintHead_medium: '{D} · 玩家胜率 40% · 人机胜率 60%',
+      hintHead_high: '{D} · 玩家胜率约 15% · 人机胜率约 85%',
+      hintTip_low: '大约每 5 局能赢 3 局',
+      hintTip_medium: '大约每 5 局能赢 2 局',
+      hintTip_high: '大约每 6~7 局才能赢 1 局',
+      hintDesc_low_1: '人机仍会看着你的招式应招，但失误偏多：你出攻击时它常反击差一级，你吸气时也不急着抓破绽。',
+      hintDesc_low_2: '适合先熟悉规则：每吸一口气 +1 气，x 级防御耗 x−1 气、y 级攻击耗 y 气，攻击力要「大于」对方防御才会致死。',
+      hintDesc_low_3: '建议：先攒 2~3 口气，再用高一级攻击压过它的防御；5 级只有攻击、没有防御。',
+      hintDesc_medium_1: '人机在多数回合认真应对：优先出攻击、不做无用防御、0 气时也会先看清你的动作再决定。',
+      hintDesc_medium_2: '你吸气时它只要有 1 口气就能用 1 级攻击终结（吸气相当于 0 级防御），别在它有余气时连续吸气。',
+      hintDesc_medium_3: '建议：用 1~2 级防御骗掉它的气，或攒够气直接出高等级攻击反压；同级攻击只会双方扣气后继续。',
+      hintDesc_high_1: '人机几乎全程针对性应招：一发现你吸气就用最低消耗的攻击终结，破不了防时也会主动出攻击施压。',
+      hintDesc_high_2: '它会优先选能击杀且最省气的攻击；你出攻击而它无法反杀时，会用同级攻击打平或出防御保命，很难被白嫖。',
+      hintDesc_high_3: '建议：藏好吸气时机，多用高等级防御拖掉它的气数，等它气数见底再出致命一击；不存在同归于尽。',
+      startBtn: '开始对战',
+
+      rulesTitle: '游戏规则',
+      rule1: '<span class="tag">吸气</span>每吸一口气，自己的气数 <b>+1</b>；被任意等级的攻击命中时，吸气视为 <b>0 级防御</b>，直接死亡。',
+      rule2: '<span class="tag">防御</span>x 级防御消耗 <b>x−1 口气</b>（1 级防御消耗 0 口气），防御力 = x，最高 4 级。',
+      rule3: '<span class="tag">攻击</span>y 级攻击消耗 <b>y 口气</b>，攻击力 = y，最高 5 级；<b>5 级只有攻击，没有防御</b>。',
+      rule4: '<span class="tag">判定</span>攻击力 <b>大于</b> 对方防御力（或对方攻击力）时，对方死亡，本场对战结束；同级攻击双方扣气后继续，<b>不存在同归于尽</b>。',
+      rule5: '<span class="tag">操作</span>二级菜单：先点「吸气 / 防御 / 攻击」，再点具体等级；点开一个分类时，其他分类的展开面板自动收起。',
+      rule6: '<span class="tag">节奏</span>回合间隔 0.3–0.5 秒；气数不足时按攻击会在下方提示「气数不足」，改按其他按钮提示消失。',
+
+      recordsTitle: '对战记录', clearRecords: '清空记录',
+      emptyRecords: '暂无对战记录，开始一场对战吧',
+      statTpl: '总场次 <b>{T}</b> · 玩家胜 <b>{W}</b> · 人机胜 <b>{A}</b>',
+      badgeWin: '玩家胜', badgeLose: '人机胜',
+      recordLine: '第 {R} 回合 · 你「{P}」 vs 人机「{A}」',
+      unknownMove: '—', legacyDetail: '',
+
+      backBtn: '← 返回主界面',
+      playerTag: '玩家（你）', aiTag: '人机', qiCaption: '气 数',
+      waitMove: '待出招', roundTpl: '第 {R} 回合',
+      statusSelect: '请选择本回合的动作（先点分类，再点等级）',
+      statusPlayed: '已出招，人机几乎同时应招…',
+      statusContinue: '{D}，扣除气数后继续下一回合',
+      statusEndWin: '人机死亡，本场对战结束',
+      statusEndLose: '你已死亡，本场对战结束',
+      warningQi: '气数不足', toastNext: '已进入下一回合',
+
+      cat_breathe: '吸气', cat_defend: '防御', cat_attack: '攻击',
+      panel_breathe: '吸气', panel_defend: '防御', panel_attack: '攻击',
+      panelNote_breathe: '气数 +1 · 相当于 0 级防御',
+      panelNote_defend: 'x 级消耗 x−1 口气 · 最高 4 级',
+      panelNote_attack: 'y 级消耗 y 口气 · 最高 5 级（5 级无防御）',
+
+      logTitle: '本局回合记录', logCountTpl: '{N} 回合',
+      logEmpty: '出招后，这里会逐回合记录你和人机出了什么',
+      logRound: '第 {R} 回合',
+      logMoves: '你 <b>{P}</b> · 人机 <b>{A}</b>',
+      logQi: '气 {P} / {A}',
+
+      resultMark: '对战结束', resultInitial: '你获胜',
+      resultTitleWin: '你获胜 · 人机死亡', resultTitleLose: '人机获胜 · 你死亡',
+      resultBack: '返回主界面',
+      resultTip: '出现提示后会自动返回主界面，并在下方显示对战记录',
+      resultDetailTpl: '{D}。{S}{E}',
+      resultSuffixWin: '人机死亡，你获胜！', resultSuffixLose: '你死亡，人机获胜！',
+      resultSuffixEnd: '即将返回主界面…',
+
+      moveBreathe: '吸气', moveDefend: '{L}级防御', moveAttack: '{L}级攻击',
+      moveSubBreathe: '+1 气', moveSubCost: '耗 {C} 气', moveSubMc: '{L} 级 · 耗 {C} 气',
+      mcBreathe: '使用附魔之瓶(吸气)', mcAttack: '横扫之刃',
+      mcDefendLow: '伤害吸收', mcDefendHigh: '抗性提升',
+
+      cmpGreater: '大于', cmpNot: '未超过',
+      descBothWin: '你的{P}（攻击力 {PL}）大于人机的{A}（攻击力 {AL}）',
+      descBothLose: '人机的{A}（攻击力 {AL}）大于你的{P}（攻击力 {PL}）',
+      descBothTie: '双方都出了 {L} 级攻击，攻击力相同，扣除气数后继续',
+      descAtkBreathe: '人机正在吸气（相当于 0 级防御），被你的{P}（攻击力 {L}）命中',
+      descAtkDef: '你的{P}（攻击力 {L}）{C}人机的{A}（防御 {AL}）',
+      descBreAtk: '你正在吸气（相当于 0 级防御），被人机的{A}（攻击力 {L}）命中',
+      descDefAtk: '人机的{A}（攻击力 {AL}）{C}你的{P}（防御 {PL}）',
+      descNone: '你{P}，人机{A}，双方均未造成致命一击',
+
+      brPlayerWin: '人机死亡 · 你获胜', brAiWin: '你死亡 · 人机获胜',
+      brTieAtk: '攻击力相同 · 继续', brBlocked: '攻击被防住 · 继续',
+      brBothBreathe: '双方吸气 · 继续', brNone: '双方未分胜负 · 继续'
     },
+
+    /* MC：只覆盖专属词，其余全部回退 zh，保持原来的中文界面 */
     mc: {
       name: 'MC',
-      diff: { low: '末地(简单)', medium: '筛界(普通)', high: '下界(困难)' },
-      panel: { breathe: '使用附魔之瓶(吸气)', defend: '伤害吸收 / 抗性提升', attack: '横扫之刃' }
+      diff_low: '末地(简单)', diff_medium: '筛界(普通)', diff_high: '下界(困难)',
+      panel_breathe: '使用附魔之瓶(吸气)', panel_defend: '伤害吸收 / 抗性提升', panel_attack: '横扫之刃',
+      moveSubMc: '{L} 级 · 耗 {C} 气',
+      mcBreathe: '使用附魔之瓶(吸气)', mcAttack: '横扫之刃',
+      mcDefendLow: '伤害吸收', mcDefendHigh: '抗性提升'
+    },
+
+    /* English：全量英文，切换后整个界面（含记录、弹窗、提示）均为英文 */
+    en: {
+      name: 'English', htmlLang: 'en', docTitle: 'Claply Game',
+      title: 'Claply Game', subtitle: 'Turn-Based Battle Game', brand: 'Sanxin Special',
+      langTitle: 'Current language: {N} — click to switch', langAria: 'Switch language',
+      themeTitle: 'Toggle light / dark mode', themeAria: 'Toggle light / dark mode',
+
+      diffTitle: 'Choose Difficulty',
+      diff_low: 'Easy', diff_medium: 'Normal', diff_high: 'Hard',
+      diffText_low: 'Player win 60%', diffText_medium: 'Player win 40%', diffText_high: 'Player win ~15%',
+      hintHead_low: '{D} · Player win 60% · AI win 40%',
+      hintHead_medium: '{D} · Player win 40% · AI win 60%',
+      hintHead_high: '{D} · Player win ~15% · AI win ~85%',
+      hintTip_low: 'About 3 wins in every 5 matches',
+      hintTip_medium: 'About 2 wins in every 5 matches',
+      hintTip_high: 'About 1 win in every 6–7 matches',
+      hintDesc_low_1: 'The AI still reacts to your move, but slips up often: it counters one level too low and rarely punishes you for breathing.',
+      hintDesc_low_2: 'Good for learning the rules: each breath gives +1 Qi, a Level x Guard costs x−1 Qi, a Level y Attack costs y Qi, and Attack power must be greater than Guard to kill.',
+      hintDesc_low_3: 'Tip: build 2–3 Qi first, then use an Attack one level above its Guard. Level 5 has Attack only, no Guard.',
+      hintDesc_medium_1: 'The AI plays seriously in most rounds: it prefers Attacks, never wastes a Guard, and reads your move even at 0 Qi.',
+      hintDesc_medium_2: 'If you breathe while it has just 1 Qi, a Level 1 Attack ends you (breathing counts as Level 0 Guard) — do not keep breathing when it has Qi.',
+      hintDesc_medium_3: 'Tip: bait out its Qi with Level 1–2 Guards, or save up for a higher Attack. Equal Attacks only spend Qi and continue.',
+      hintDesc_high_1: 'The AI counters almost everything: it finishes you with the cheapest Attack the moment you breathe, and keeps attacking when it cannot break your Guard.',
+      hintDesc_high_2: 'It always picks the cheapest lethal Attack; when it cannot kill you, it matches your Attack or Guards to survive, so free hits are rare.',
+      hintDesc_high_3: 'Tip: hide your breathing, drain its Qi with high-level Guards, then strike when it is empty. There is no mutual kill.',
+      startBtn: 'Start Battle',
+
+      rulesTitle: 'Game Rules',
+      rule1: '<span class="tag">Breathe</span>Each breath gives you <b>+1 Qi</b>; if any Attack hits you while breathing, it counts as <b>Level 0 Guard</b> and you die.',
+      rule2: '<span class="tag">Guard</span>A Level x Guard costs <b>x−1 Qi</b> (Level 1 costs 0). Guard power = x, up to Level 4.',
+      rule3: '<span class="tag">Attack</span>A Level y Attack costs <b>y Qi</b>. Attack power = y, up to Level 5; <b>Level 5 has Attack only, no Guard</b>.',
+      rule4: '<span class="tag">Resolve</span>When Attack power is <b>greater than</b> the opponent Guard (or Attack), they die and the match ends. Equal Attacks spend Qi and continue — <b>there is no mutual kill</b>.',
+      rule5: '<span class="tag">Controls</span>Two-level menu: pick Breathe / Guard / Attack first, then a level. Opening one category closes the others.',
+      rule6: '<span class="tag">Pace</span>0.3–0.5 s between rounds. Attacking without enough Qi shows "Not enough Qi"; picking another action clears it.',
+
+      recordsTitle: 'Match History', clearRecords: 'Clear History',
+      emptyRecords: 'No matches yet — start a battle!',
+      statTpl: 'Matches <b>{T}</b> · Player wins <b>{W}</b> · AI wins <b>{A}</b>',
+      badgeWin: 'Player Win', badgeLose: 'AI Win',
+      recordLine: 'Round {R} · You "{P}" vs AI "{A}"',
+      unknownMove: 'Unknown move', legacyDetail: 'Saved by an earlier version — details unavailable.',
+
+      backBtn: '← Back to Home',
+      playerTag: 'You (Player)', aiTag: 'AI', qiCaption: 'QI',
+      waitMove: 'Waiting…', roundTpl: 'Round {R}',
+      statusSelect: 'Choose your move (pick a category, then a level)',
+      statusPlayed: 'Move locked in — the AI responds almost instantly…',
+      statusContinue: '{D}. Qi spent — next round',
+      statusEndWin: 'AI defeated — match over',
+      statusEndLose: 'You were defeated — match over',
+      warningQi: 'Not enough Qi', toastNext: 'Next Round',
+
+      cat_breathe: 'Breathe', cat_defend: 'Guard', cat_attack: 'Attack',
+      panel_breathe: 'Breathe', panel_defend: 'Guard', panel_attack: 'Attack',
+      panelNote_breathe: '+1 Qi · counts as Level 0 Guard',
+      panelNote_defend: 'Level x costs x−1 Qi · up to Level 4',
+      panelNote_attack: 'Level y costs y Qi · up to Level 5 (Level 5 has no Guard)',
+
+      logTitle: 'Round Log', logCountTpl: '{N} rounds',
+      logEmpty: 'After your first move, every round will be logged here.',
+      logRound: 'Round {R}',
+      logMoves: 'You <b>{P}</b> · AI <b>{A}</b>',
+      logQi: 'Qi {P} / {A}',
+
+      resultMark: 'MATCH OVER', resultInitial: 'You Win',
+      resultTitleWin: 'You Win · AI Defeated', resultTitleLose: 'AI Wins · You Were Defeated',
+      resultBack: 'Back to Home',
+      resultTip: 'You will return to the home screen automatically, and this match will appear in the history below.',
+      resultDetailTpl: '{D}. {S}{E}',
+      resultSuffixWin: 'The AI is defeated. You win!', resultSuffixLose: 'You were defeated. The AI wins!',
+      resultSuffixEnd: ' Returning to home…',
+
+      moveBreathe: 'Breathe', moveDefend: 'Guard Lv.{L}', moveAttack: 'Attack Lv.{L}',
+      moveSubBreathe: '+1 Qi', moveSubCost: 'Cost {C} Qi', moveSubMc: 'Lv.{L} · Cost {C} Qi',
+      mcBreathe: 'Use Enchanted Bottle (Breathe)', mcAttack: 'Sweeping Blade',
+      mcDefendLow: 'Damage Absorption', mcDefendHigh: 'Resistance',
+
+      cmpGreater: 'beats', cmpNot: 'does not beat',
+      descBothWin: 'Your {P} (ATK {PL}) beats the AI {A} (ATK {AL})',
+      descBothLose: 'The AI {A} (ATK {AL}) beats your {P} (ATK {PL})',
+      descBothTie: 'Both used a Level {L} Attack — equal power, Qi spent, next round',
+      descAtkBreathe: 'The AI was breathing (Level 0 Guard) and was hit by your {P} (ATK {L})',
+      descAtkDef: 'Your {P} (ATK {L}) {C} the AI {A} (Guard {AL})',
+      descBreAtk: 'You were breathing (Level 0 Guard) and were hit by the AI {A} (ATK {L})',
+      descDefAtk: 'The AI {A} (ATK {AL}) {C} your {P} (Guard {PL})',
+      descNone: 'You used {P}, the AI used {A} — no lethal hit',
+
+      brPlayerWin: 'AI defeated · You win', brAiWin: 'You died · AI wins',
+      brTieAtk: 'Equal ATK · continue', brBlocked: 'Attack blocked · continue',
+      brBothBreathe: 'Both breathed · continue', brNone: 'No winner · continue'
     }
   };
+
+  const LANGS = ['zh', 'mc', 'en'];
   let language = 'zh';
+  function T(k) {
+    const cur = DICT[language];
+    if (cur && Object.prototype.hasOwnProperty.call(cur, k)) return cur[k];
+    return Object.prototype.hasOwnProperty.call(DICT.zh, k) ? DICT.zh[k] : k;
+  }
+  const TT = (k, v) => fmt(T(k), v);
 
   /* 难度 = 玩家整场胜率（开局抽签精确控制），人机胜率 = 1 − 玩家胜率
-     低 3/5=60%、中 2/5=40%、高 1/6.5≈15%；
-     head 里的 {D} 会替换成当前语言的难度名，供说明区动态切换 */
+     低 3/5=60%、中 2/5=40%、高 1/6.5≈15%；文案键指向字典，按语言切换 */
   const DIFF = {
     low: {
-      playerWin: 3 / 5, text: '玩家胜率 60%',
-      head: '{D} · 玩家胜率 60% · 人机胜率 40%',
-      tip: '大约每 5 局能赢 3 局',
-      desc: [
-        '人机仍会看着你的招式应招，但失误偏多：你出攻击时它常反击差一级，你吸气时也不急着抓破绽。',
-        '适合先熟悉规则：每吸一口气 +1 气，x 级防御耗 x−1 气、y 级攻击耗 y 气，攻击力要「大于」对方防御才会致死。',
-        '建议：先攒 2~3 口气，再用高一级攻击压过它的防御；5 级只有攻击、没有防御。'
-      ]
+      playerWin: 3 / 5,
+      headKey: 'hintHead_low', tipKey: 'hintTip_low',
+      descKeys: ['hintDesc_low_1', 'hintDesc_low_2', 'hintDesc_low_3']
     },
     medium: {
-      playerWin: 2 / 5, text: '玩家胜率 40%',
-      head: '{D} · 玩家胜率 40% · 人机胜率 60%',
-      tip: '大约每 5 局能赢 2 局',
-      desc: [
-        '人机在多数回合认真应对：优先出攻击、不做无用防御、0 气时也会先看清你的动作再决定。',
-        '你吸气时它只要有 1 口气就能用 1 级攻击终结（吸气相当于 0 级防御），别在它有余气时连续吸气。',
-        '建议：用 1~2 级防御骗掉它的气，或攒够气直接出高等级攻击反压；同级攻击只会双方扣气后继续。'
-      ]
+      playerWin: 2 / 5,
+      headKey: 'hintHead_medium', tipKey: 'hintTip_medium',
+      descKeys: ['hintDesc_medium_1', 'hintDesc_medium_2', 'hintDesc_medium_3']
     },
     high: {
-      playerWin: 1 / 6.5, text: '玩家胜率约 15%',
-      head: '{D} · 玩家胜率约 15% · 人机胜率约 85%',
-      tip: '大约每 6~7 局才能赢 1 局',
-      desc: [
-        '人机几乎全程针对性应招：一发现你吸气就用最低消耗的攻击终结，破不了防时也会主动出攻击施压。',
-        '它会优先选能击杀且最省气的攻击；你出攻击而它无法反杀时，会用同级攻击打平或出防御保命，很难被白嫖。',
-        '建议：藏好吸气时机，多用高等级防御拖掉它的气数，等它气数见底再出致命一击；不存在同归于尽。'
-      ]
+      playerWin: 1 / 6.5,
+      headKey: 'hintHead_high', tipKey: 'hintTip_high',
+      descKeys: ['hintDesc_high_1', 'hintDesc_high_2', 'hintDesc_high_3']
     }
   };
 
@@ -625,20 +807,20 @@
   const ROUND_GAP_MIN = 300, ROUND_GAP_MAX = 500;   // 回合间隔：0.3–0.5 秒
 
   /* 招式表：吸气 + 1~4 级防御 + 1~5 级攻击（5 级无防御）
-     MC 语言下：攻击统一「横扫之刃」，1~2 级防御「伤害吸收」，
-     3~4 级防御「抗性提升」，吸气「使用附魔之瓶(吸气)」。
-     同名招式由 small 里的「N 级」区分，数值与判定完全不变。 */
+     label / sub 用 getter 动态读取当前语言；MC 下同名招式由 small 的「N 级」区分，
+     cost / level / 判定完全不变。 */
   function moveLabel(type, level) {
     if (language === 'mc') {
-      if (type === 'breathe') return '使用附魔之瓶(吸气)';
-      if (type === 'attack') return '横扫之刃';
-      return level <= 2 ? '伤害吸收' : '抗性提升';
+      if (type === 'breathe') return T('mcBreathe');
+      if (type === 'attack') return T('mcAttack');
+      return level <= 2 ? T('mcDefendLow') : T('mcDefendHigh');
     }
-    return type === 'breathe' ? '吸气' : type === 'defend' ? level + '级防御' : level + '级攻击';
+    if (type === 'breathe') return T('moveBreathe');
+    return fmt(T(type === 'defend' ? 'moveDefend' : 'moveAttack'), { L: level });
   }
   function moveSub(m) {
-    if (language === 'mc' && m.type !== 'breathe') return m.level + ' 级 · 耗 ' + m.cost + ' 气';
-    return m.type === 'breathe' ? '+1 气' : '耗 ' + m.cost + ' 气';
+    if (language === 'mc' && m.type !== 'breathe') return fmt(T('moveSubMc'), { L: m.level, C: m.cost });
+    return m.type === 'breathe' ? T('moveSubBreathe') : fmt(T('moveSubCost'), { C: m.cost });
   }
   const MOVES = [
     { type: 'breathe', level: 0, cost: 0,
@@ -660,17 +842,34 @@
     const type = k.slice(0, i), level = Number(k.slice(i + 1));
     return MOVES.find(m => m.type === type && m.level === level) || null;
   }
-  const diffLabel = key => (I18N[language].diff[key] || I18N.zh.diff[key] || key);
+  // 旧记录里保存的是当时的招式名文字，英文模式下尽量反查成英文招式名
+  function legacyMoveLabel(label) {
+    if (!label) return T('unknownMove');
+    let type = null, level = 0;
+    if (label === '吸气' || label === '使用附魔之瓶(吸气)') { type = 'breathe'; level = 0; }
+    else {
+      const m = /^(\d)级(防御|攻击)$/.exec(label);
+      if (m) { level = Number(m[1]); type = m[2] === '防御' ? 'defend' : 'attack'; }
+    }
+    if (!type) return T('unknownMove');
+    const move = MOVES.find(x => x.type === type && x.level === level);
+    return move ? move.label : T('unknownMove');
+  }
+  const diffLabel = key => T('diff_' + key);
+  const diffText = key => T('diffText_' + key);
   function recordDiffLabel(d) {
-    if (I18N.zh.diff[d]) return I18N[language].diff[d];   // 新记录存 low/medium/high
-    const key = Object.keys(I18N.zh.diff).find(k => I18N.zh.diff[k] === d);  // 旧记录存中文名
-    return key ? I18N[language].diff[key] : (d || '');
+    if (DIFF[d]) return diffLabel(d);
+    const k = Object.keys(DIFF).find(x =>
+      DICT.zh['diff_' + x] === d || (DICT.mc['diff_' + x] === d));
+    return k ? diffLabel(k) : (d || '');
   }
 
   let difficulty = 'medium';
   let state = null;
   let matchToken = 0;      // 防止返回主界面后异步流程继续执行
   let toastTimer = null;
+  let lastToastKey = null;
+  let lastWarningKey = null;
   let lastResult = null;   // 结算弹窗当前展示的招式，切语言时重算文案
   let records = loadRecords();
 
@@ -689,53 +888,104 @@
   });
 
   /* ---------- 语言切换 ---------- */
-  function applyLanguage(lang) {
-    language = lang === 'mc' ? 'mc' : 'zh';
-    document.documentElement.dataset.lang = language;
-    try { localStorage.setItem('clap-lang', language); } catch (e) {}
-    $('langText').textContent = I18N[language].name;
-    $('langToggle').title = '当前语言：' + I18N[language].name + '，点击切换';
-    $('langToggle').setAttribute('aria-label', $('langToggle').title);
+  function applyStaticText() {
+    document.title = T('docTitle');
+    document.documentElement.lang = T('htmlLang');
+    $('langText').textContent = T('name');
+    $('langToggle').title = fmt(T('langTitle'), { N: T('name') });
+    $('langToggle').setAttribute('aria-label', T('langAria'));
+    $('themeToggle').title = T('themeTitle');
+    $('themeToggle').setAttribute('aria-label', T('themeAria'));
 
-    // 难度按钮文字（保留胜率小字）
+    const pairs = [
+      ['heroTitle', 'title'], ['subtitleText', 'subtitle'], ['brandText', 'brand'],
+      ['diffTitle', 'diffTitle'], ['startBtn', 'startBtn'],
+      ['rulesTitle', 'rulesTitle'], ['recordsTitle', 'recordsTitle'],
+      ['clearRecords', 'clearRecords'], ['backBtn', 'backBtn'],
+      ['playerTag', 'playerTag'], ['aiTag', 'aiTag'],
+      ['playerQiCaption', 'qiCaption'], ['aiQiCaption', 'qiCaption'],
+      ['logTitle', 'logTitle'], ['resultMark', 'resultMark'],
+      ['resultBack', 'resultBack'], ['resultTip', 'resultTip']
+    ];
+    pairs.forEach(([id, key]) => { $(id).textContent = T(key); });
+
+    ['breathe', 'defend', 'attack'].forEach(c => {
+      const cap = c.charAt(0).toUpperCase() + c.slice(1);
+      $('cat' + cap).textContent = T('cat_' + c);
+      $('panel' + cap + 'Name').textContent = T('panel_' + c);
+      $('panel' + cap + 'Note').textContent = T('panelNote_' + c);
+    });
+
+    const smallIds = { low: 'diffSmallLow', medium: 'diffSmallMedium', high: 'diffSmallHigh' };
     document.querySelectorAll('.diff-btn').forEach(b => {
       const s = b.querySelector('.diff-name');
       if (s) s.textContent = diffLabel(b.dataset.diff);
+      $(smallIds[b.dataset.diff]).textContent = diffText(b.dataset.diff);
     });
-    // 二级菜单标题与吸气按钮
-    $('panelBreatheName').textContent = I18N[language].panel.breathe;
-    $('panelDefendName').textContent = I18N[language].panel.defend;
-    $('panelAttackName').textContent = I18N[language].panel.attack;
+
+    for (let i = 1; i <= 6; i++) $('rule' + i).innerHTML = T('rule' + i);
     const breatheBtn = document.querySelector('.act-btn.breathe');
     if (breatheBtn) breatheBtn.innerHTML = MOVES[0].label + ' <small>' + MOVES[0].sub + '</small>';
+
+    // 初始态里仍带中文的几处（主界面 / 对局界面隐藏时的缺省文字）
+    if (!state) {
+      $('status').textContent = T('statusSelect');
+      $('playerMove').textContent = T('waitMove');
+      $('aiMove').textContent = T('waitMove');
+      $('roundLabel').textContent = fmt(T('roundTpl'), { R: 1 });
+    }
+    $('diffBadge').textContent = diffLabel(difficulty) + ' · ' + diffText(difficulty);
+    if (!lastResult || !$('resultOverlay').classList.contains('show')) {
+      $('resultTitle').textContent = T('resultInitial');
+    }
+  }
+
+  function renderResultText() {
+    if (!lastResult) return;
+    const win = lastResult.winner === 'player';
+    $('resultTitle').textContent = T(win ? 'resultTitleWin' : 'resultTitleLose');
+    $('resultTitle').className = win ? 'win' : 'lose';
+    $('resultDetail').textContent = fmt(T('resultDetailTpl'), {
+      D: describe(lastResult.pm, lastResult.am),
+      S: T(win ? 'resultSuffixWin' : 'resultSuffixLose'),
+      E: T('resultSuffixEnd')
+    });
+  }
+
+  function applyLanguage(lang) {
+    language = LANGS.indexOf(lang) >= 0 ? lang : 'zh';
+    document.documentElement.dataset.lang = language;
+    try { localStorage.setItem('clap-lang', language); } catch (e) {}
+
+    applyStaticText();
     renderMoveButtons();
     renderDiffHint();
 
-    // 对局中切换：出招框、回合记录、状态栏、难度徽章同步刷新
+    // 对局中切换：出招框、回合记录、状态栏、难度徽章、警告与 toast 同步刷新
     if (state) {
       render();
       if (state.locked && state.playerMove) markButton(state.playerMove);
       renderMove('player', state.playerMove);
       renderMove('ai', state.aiMove);
-      renderRoundLog();
-      if (state.detailMoves) {
-        $('status').textContent = describe(state.detailMoves.p, state.detailMoves.a) + '，扣除气数后继续下一回合';
+      if (state.statusKey === 'statusContinue' && state.detailMoves) {
+        setStatus('statusContinue', { D: describe(state.detailMoves.p, state.detailMoves.a) });
+      } else if (state.statusKey) {
+        setStatus(state.statusKey, state.statusVars);
       }
     }
-    // 结算弹窗正在显示时也要跟着换语言
-    if (lastResult && $('resultOverlay').classList.contains('show')) {
-      $('resultDetail').textContent = describe(lastResult.pm, lastResult.am) + '。' +
-        (lastResult.winner === 'player' ? '人机死亡，你获胜！' : '你死亡，人机获胜！') + '即将返回主界面…';
-    }
+    renderRoundLog();
+    if (lastWarningKey) $('warning').textContent = T(lastWarningKey);
+    if (lastToastKey && $('toast').classList.contains('show')) $('toast').textContent = T(lastToastKey);
+    if (lastResult && $('resultOverlay').classList.contains('show')) renderResultText();
     renderRecords();
   }
   (function initLanguage() {
     let saved = null;
     try { saved = localStorage.getItem('clap-lang'); } catch (e) {}
-    applyLanguage(saved === 'mc' ? 'mc' : 'zh');
+    applyLanguage(LANGS.indexOf(saved) >= 0 ? saved : 'zh');
   })();
   $('langToggle').addEventListener('click', () => {
-    applyLanguage(language === 'zh' ? 'mc' : 'zh');
+    applyLanguage(LANGS[(LANGS.indexOf(language) + 1) % LANGS.length]);
   });
 
   /* ---------- 记录 ---------- */
@@ -748,10 +998,11 @@
   function renderRecords() {
     const list = $('recordList');
     const wins = records.filter(r => r.winner === 'player').length;
-    $('recordStat').innerHTML = '总场次 <b>' + records.length + '</b> · 玩家胜 <b>' + wins +
-      '</b> · 人机胜 <b>' + (records.length - wins) + '</b>';
+    $('recordStat').innerHTML = fmt(T('statTpl'), {
+      T: records.length, W: wins, A: records.length - wins
+    });
     if (!records.length) {
-      list.innerHTML = '<div class="empty">暂无对战记录，开始一场对战吧</div>';
+      list.innerHTML = '<div class="empty">' + T('emptyRecords') + '</div>';
       return;
     }
     list.innerHTML = records.map(r => {
@@ -760,15 +1011,22 @@
       const time = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' +
         String(d.getDate()).padStart(2, '0') + ' ' + String(d.getHours()).padStart(2, '0') + ':' +
         String(d.getMinutes()).padStart(2, '0') + ':' + String(d.getSeconds()).padStart(2, '0');
-      // 新记录存 type:level，按当前语言实时生成招式名与描述；旧记录回退到保存时的文字
+      // 新记录存 type:level，按当前语言实时生成招式名与描述；
+      // 旧记录（存的是文字）在中文/MC 下原样显示，英文模式下换成英文回退，避免残留中文
       const pm = moveFromKey(r.pKey), am = moveFromKey(r.aKey);
-      const pLabel = pm ? pm.label : (r.pLabel || '—');
-      const aLabel = am ? am.label : (r.aLabel || '—');
-      const detail = (pm && am) ? describe(pm, am) : (r.detail || '');
+      let pLabel, aLabel, detail;
+      if (pm && am) {
+        pLabel = pm.label; aLabel = am.label; detail = describe(pm, am);
+      } else if (language === 'en') {
+        pLabel = legacyMoveLabel(r.pLabel); aLabel = legacyMoveLabel(r.aLabel);
+        detail = T('legacyDetail');
+      } else {
+        pLabel = r.pLabel || '—'; aLabel = r.aLabel || '—'; detail = r.detail || '';
+      }
       return '<div class="record">' +
-        '<span class="badge ' + (win ? 'win' : 'lose') + '">' + (win ? '玩家胜' : '人机胜') + '</span>' +
+        '<span class="badge ' + (win ? 'win' : 'lose') + '">' + T(win ? 'badgeWin' : 'badgeLose') + '</span>' +
         '<div class="body">' +
-          '<div class="line1">第 ' + r.round + ' 回合 · 你「' + pLabel + '」 vs 人机「' + aLabel + '」</div>' +
+          '<div class="line1">' + fmt(T('recordLine'), { R: r.round, P: pLabel, A: aLabel }) + '</div>' +
           '<div class="line2">' + detail + '</div>' +
           '<div class="time">' + recordDiffLabel(r.diff) + ' · ' + time + '</div>' +
         '</div></div>';
@@ -804,38 +1062,42 @@
 
   function describe(pm, am) {
     if (pm.type === 'attack' && am.type === 'attack') {
-      if (pm.level > am.level) return '你的' + pm.label + '（攻击力 ' + pm.level + '）大于人机的' + am.label + '（攻击力 ' + am.level + '）';
-      if (pm.level < am.level) return '人机的' + am.label + '（攻击力 ' + am.level + '）大于你的' + pm.label + '（攻击力 ' + pm.level + '）';
-      return '双方都出了 ' + pm.level + ' 级攻击，攻击力相同，扣除气数后继续';
+      if (pm.level > am.level) return TT('descBothWin', { P: pm.label, PL: pm.level, A: am.label, AL: am.level });
+      if (pm.level < am.level) return TT('descBothLose', { P: pm.label, PL: pm.level, A: am.label, AL: am.level });
+      return TT('descBothTie', { L: pm.level });
     }
     if (pm.type === 'attack') {
-      if (am.type === 'breathe') return '人机正在吸气（相当于 0 级防御），被你的' + pm.label + '（攻击力 ' + pm.level + '）命中';
-      return '你的' + pm.label + '（攻击力 ' + pm.level + '）' + (pm.level > am.level ? '大于' : '未超过') +
-        '人机的' + am.label + '（防御 ' + am.level + '）';
+      if (am.type === 'breathe') return TT('descAtkBreathe', { P: pm.label, L: pm.level });
+      return TT('descAtkDef', {
+        P: pm.label, L: pm.level, C: T(pm.level > am.level ? 'cmpGreater' : 'cmpNot'),
+        A: am.label, AL: am.level
+      });
     }
     if (am.type === 'attack') {
-      if (pm.type === 'breathe') return '你正在吸气（相当于 0 级防御），被人机的' + am.label + '（攻击力 ' + am.level + '）命中';
-      return '人机的' + am.label + '（攻击力 ' + am.level + '）' + (am.level > pm.level ? '大于' : '未超过') +
-        '你的' + pm.label + '（防御 ' + pm.level + '）';
+      if (pm.type === 'breathe') return TT('descBreAtk', { A: am.label, L: am.level });
+      return TT('descDefAtk', {
+        A: am.label, AL: am.level, C: T(am.level > pm.level ? 'cmpGreater' : 'cmpNot'),
+        P: pm.label, PL: pm.level
+      });
     }
-    return '你' + pm.label + '，人机' + am.label + '，双方均未造成致命一击';
+    return TT('descNone', { P: pm.label, A: am.label });
   }
 
   /* ---------- 对局中的逐回合记录 ---------- */
   function briefResult(pm, am, winner) {
-    if (winner === 'player') return '人机死亡 · 你获胜';
-    if (winner === 'ai') return '你死亡 · 人机获胜';
-    if (pm.type === 'attack' && am.type === 'attack') return '攻击力相同 · 继续';
-    if (pm.type === 'attack' || am.type === 'attack') return '攻击被防住 · 继续';
-    if (pm.type === 'breathe' && am.type === 'breathe') return '双方吸气 · 继续';
-    return '双方未分胜负 · 继续';
+    if (winner === 'player') return T('brPlayerWin');
+    if (winner === 'ai') return T('brAiWin');
+    if (pm.type === 'attack' && am.type === 'attack') return T('brTieAtk');
+    if (pm.type === 'attack' || am.type === 'attack') return T('brBlocked');
+    if (pm.type === 'breathe' && am.type === 'breathe') return T('brBothBreathe');
+    return T('brNone');
   }
   function renderRoundLog() {
     const box = $('roundLogList');
     const log = state ? state.log : [];
-    $('roundLogCount').textContent = log.length + ' 回合';
+    $('roundLogCount').textContent = fmt(T('logCountTpl'), { N: log.length });
     if (!log.length) {
-      box.innerHTML = '<div class="log-empty">出招后，这里会逐回合记录你和人机出了什么</div>';
+      box.innerHTML = '<div class="log-empty">' + T('logEmpty') + '</div>';
       return;
     }
     box.innerHTML = log.map(e => {
@@ -844,9 +1106,9 @@
       const aLabel = am ? am.label : (e.a || '');
       const result = (pm && am) ? briefResult(pm, am, e.winner) : (e.result || '');
       return '<div class="log-row">' +
-        '<span class="log-round">第 ' + e.round + ' 回合</span>' +
-        '<span class="log-moves">你 <b>' + pLabel + '</b> · 人机 <b>' + aLabel + '</b></span>' +
-        '<span class="log-qi">气 ' + e.pq + ' / ' + e.aq + '</span>' +
+        '<span class="log-round">' + fmt(T('logRound'), { R: e.round }) + '</span>' +
+        '<span class="log-moves">' + fmt(T('logMoves'), { P: pLabel, A: aLabel }) + '</span>' +
+        '<span class="log-qi">' + fmt(T('logQi'), { P: e.pq, A: e.aq }) + '</span>' +
         '<span class="log-result' + (e.end ? ' end' : '') + '">' + result + '</span>' +
       '</div>';
     }).join('');
@@ -899,9 +1161,9 @@
   function renderDiffHint() {
     const d = DIFF[difficulty];
     const el = $('diffHint');
-    el.innerHTML = '<span class="hint-head">' + d.head.replace('{D}', diffLabel(difficulty)) + '</span>' +
-      '<span class="hint-tip">' + d.tip + '</span>' +
-      d.desc.map(s => '<span class="hint-line">' + s + '</span>').join('');
+    el.innerHTML = '<span class="hint-head">' + fmt(T(d.headKey), { D: diffLabel(difficulty) }) + '</span>' +
+      '<span class="hint-tip">' + T(d.tipKey) + '</span>' +
+      d.descKeys.map(k => '<span class="hint-line">' + T(k) + '</span>').join('');
     el.style.animation = 'none';
     void el.offsetWidth;                       // 重播淡入，切换更明显
     el.style.animation = 'fade .3s ease both';
@@ -911,16 +1173,21 @@
     for (let i = 0; i < Math.min(n, 8); i++) s += '<i></i>';
     return s;
   }
-  function showToast(msg) {
+  function showToast(key) {
     const t = $('toast');
-    t.textContent = msg;
+    lastToastKey = key;
+    t.textContent = T(key);
     t.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 1200);
+    toastTimer = setTimeout(() => { t.classList.remove('show'); lastToastKey = null; }, 1200);
   }
-  function showWarning(msg) { $('warning').textContent = msg; }
-  function clearWarning() { $('warning').textContent = ''; }
+  function showWarning(key) { lastWarningKey = key; $('warning').textContent = T(key); }
+  function clearWarning() { lastWarningKey = null; $('warning').textContent = ''; }
   function setButtonsLocked(locked) { $('actions').classList.toggle('locked', locked); }
+  function setStatus(key, vars) {
+    if (state) { state.statusKey = key; state.statusVars = vars || {}; }
+    $('status').textContent = TT(key, vars || {});
+  }
   function markButton(move) {
     document.querySelectorAll('.act-btn').forEach(b => b.classList.remove('selected'));
     const btn = document.querySelector('.act-btn[data-move="' + MOVES.indexOf(move) + '"]');
@@ -949,7 +1216,7 @@
   }
   function renderMove(side, m) {
     const el = $(side + 'Move');
-    el.textContent = m ? m.label : '待出招';
+    el.textContent = m ? m.label : T('waitMove');
     el.className = 'fighter-move' + (m ? ' ' + (m.type === 'attack' ? 'atk' : m.type === 'defend' ? 'def' : 'bre') : '');
     el.style.animation = m ? 'none' : '';
   }
@@ -959,8 +1226,8 @@
     $('aiQi').textContent = state.aiQi;
     $('playerPips').innerHTML = pips(state.playerQi);
     $('aiPips').innerHTML = pips(state.aiQi);
-    $('roundLabel').textContent = '第 ' + state.round + ' 回合';
-    $('diffBadge').textContent = diffLabel(difficulty) + ' · ' + DIFF[difficulty].text;
+    $('roundLabel').textContent = fmt(T('roundTpl'), { R: state.round });
+    $('diffBadge').textContent = diffLabel(difficulty) + ' · ' + diffText(difficulty);
     document.querySelectorAll('.act-btn[data-move]').forEach(b => {
       const m = MOVES[Number(b.dataset.move)];
       b.classList.toggle('unaffordable', m.cost > state.playerQi);
@@ -972,7 +1239,7 @@
     if (!state || state.locked) return;
     clearWarning();   // 按其他按钮时取消「气数不足」提示
     if (move.cost > state.playerQi) {
-      showWarning('气数不足');   // 0 气时按攻击依旧显示
+      showWarning('warningQi');   // 0 气时按攻击依旧显示
       return;
     }
 
@@ -982,7 +1249,7 @@
     markButton(move);
     setButtonsLocked(true);
     renderMove('player', move);
-    $('status').textContent = '已出招，人机几乎同时应招…';
+    setStatus('statusPlayed');
 
     await sleep(randInt(AI_DELAY_MIN, AI_DELAY_MAX));
     if (token !== matchToken) return;
@@ -1011,8 +1278,8 @@
 
     const detail = describe(move, am);
     state.detailMoves = { p: move, a: am };   // 供切语言时重算状态栏
-    $('status').textContent = detail + '，扣除气数后继续下一回合';
-    showToast('已进入下一回合');
+    setStatus('statusContinue', { D: detail });
+    showToast('toastNext');
 
     await sleep(randInt(ROUND_GAP_MIN, ROUND_GAP_MAX));
     if (token !== matchToken) return;
@@ -1027,22 +1294,19 @@
     renderMove('ai', null);
     $('playerCard').classList.remove('win-flash', 'lose-flash');
     $('aiCard').classList.remove('win-flash', 'lose-flash');
-    $('status').textContent = '请选择本回合的动作（先点分类，再点等级）';
+    setStatus('statusSelect');
     render();
   }
 
   function finishMatch(winner, pm, am, token) {
     const playerWin = winner === 'player';
-    const detail = describe(pm, am);
     lastResult = { winner: winner, pm: pm, am: am };   // 切语言时重算弹窗文案
     $('playerCard').classList.add(playerWin ? 'win-flash' : 'lose-flash');
     $('aiCard').classList.add(playerWin ? 'lose-flash' : 'win-flash');
     setButtonsLocked(true);
-    $('status').textContent = playerWin ? '人机死亡，本场对战结束' : '你已死亡，本场对战结束';
+    setStatus(playerWin ? 'statusEndWin' : 'statusEndLose');
 
-    $('resultTitle').textContent = playerWin ? '你获胜 · 人机死亡' : '人机获胜 · 你死亡';
-    $('resultTitle').className = playerWin ? 'win' : 'lose';
-    $('resultDetail').textContent = detail + '。' + (playerWin ? '人机死亡，你获胜！' : '你死亡，人机获胜！') + '即将返回主界面…';
+    renderResultText();
     $('resultOverlay').classList.add('show');
 
     addRecord(winner, pm, am);
@@ -1056,6 +1320,7 @@
     state = {
       round: 1, playerQi: 0, aiQi: 0,
       playerMove: null, aiMove: null, detailMoves: null,
+      statusKey: null, statusVars: {},
       locked: false, target: pickTarget(), log: []
     };
     $('resultOverlay').classList.remove('show');
@@ -1065,7 +1330,7 @@
     $('battle').classList.add('active');
     renderMove('player', null);
     renderMove('ai', null);
-    $('status').textContent = '请选择本回合的动作（先点分类，再点等级）';
+    setStatus('statusSelect');
     resetButtons();
     renderRoundLog();
     render();
